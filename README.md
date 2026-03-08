@@ -1,3 +1,6 @@
+> Kevin: This was a fork of The Software Essentialist course repository in 2023. Much has changed in the course material and study must be done privately now. Original repo and its forks are discontinued. If you want to learn (and support) the course, visit [The Software Essentialist](https://www.essentialist.dev/the-software-essentialist). 
+
+
 # The Software Essentialist (Course Projects Repo)
 
 > The official course repo for [The Software Essentialist](https://essentialist.dev/) course students.
