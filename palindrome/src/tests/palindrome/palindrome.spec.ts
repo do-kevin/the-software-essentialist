@@ -10,4 +10,8 @@ describe('Palindrome checker', () => {
   it("should be able to tell that 'bill' is a not palindrome", () => {
     expect(palindromeChecker.isPalindrome('bill')).toBeFalsy();
   });
+
+  it('should be able to confirm it is a palindrom even when casing is different', () => {
+    expect(palindromeChecker.isPalindrome('Mom')).toBeTruthy();
+  });
 });
