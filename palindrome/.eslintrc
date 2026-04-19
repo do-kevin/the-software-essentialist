@@ -12,6 +12,7 @@
     "prettier/prettier": 2
   },
   "env": {
+    "es2021": true,
     "browser": true,
     "node": true,
     "jest/globals": true
