@@ -1,10 +1,11 @@
 class PalindromeChecker {
-  isPalindrome = (str: string) => {
-    if (str === 'mom') {
-      return true;
-    }
+  isPalindrome = (str: string): boolean => {
+    const originalString = str;
+    const reversedString = str.split('').reverse().join('');
 
-    return false;
+    const result = originalString === reversedString;
+
+    return result;
   };
 }
 
