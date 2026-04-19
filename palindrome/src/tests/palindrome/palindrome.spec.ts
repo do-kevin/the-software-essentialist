@@ -6,4 +6,10 @@ describe('Palindrome checker', () => {
 
     expect(palindromeChecker.isPalindrome('mom')).toBeTruthy();
   });
+
+  it("should be able to tell that 'bill' is a not palindrome", () => {
+    const palindromeChecker = new PalindromeChecker();
+
+    expect(palindromeChecker.isPalindrome('bill')).toBeFalsy();
+  });
 });
