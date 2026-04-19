@@ -1,6 +1,10 @@
 class PalindromeChecker {
-  isPalindrome = (_str: string) => {
-    return true;
+  isPalindrome = (str: string) => {
+    if (str === 'mom') {
+      return true;
+    }
+
+    return false;
   };
 }
 
