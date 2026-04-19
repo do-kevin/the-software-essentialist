@@ -1,7 +1,7 @@
 class PalindromeChecker {
   isPalindrome = (str: string): boolean => {
-    const originalString = str;
-    const reversedString = str.split('').reverse().join('');
+    const originalString = str.toLowerCase();
+    const reversedString = str.toLowerCase().split('').reverse().join('');
 
     const result = originalString === reversedString;
 
