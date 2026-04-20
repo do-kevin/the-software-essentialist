@@ -1,11 +1,13 @@
 import { fizzBuzz } from '../../utils/fizzbuzzGame';
 
 describe('FizzBuzz', () => {
-  it('should return "Fizz" when it receives 3', () => {
-    const result = fizzBuzz(3);
-
-    expect(result).toBe('Fizz');
-  });
+  it.each([3, 9, 42, 102, -12])(
+    'should return Fizz when given multiples of 3',
+    (value) => {
+      const result = fizzBuzz(value);
+      expect(result).toBe('Fizz');
+    },
+  );
 
   it('should return "Buzz" when it receives 5', () => {
     const result = fizzBuzz(5);
@@ -19,12 +21,6 @@ describe('FizzBuzz', () => {
     expect(result).toBe('FizzBuzz');
   });
 
-  it('should return "Fizz" when it receives 9', () => {
-    const result = fizzBuzz(9);
-
-    expect(result).toBe('Fizz');
-  });
-
   it('should return "43" when it receives 43', () => {
     const result = fizzBuzz(43);
 
@@ -32,28 +28,10 @@ describe('FizzBuzz', () => {
     expect(result).toBe('43');
   });
 
-  it('should return "Fizz" when it receives 42', () => {
-    const result = fizzBuzz(42);
-
-    expect(result).toBe('Fizz');
-  });
-
   it('should return "FizzBuzz" when it receives 45', () => {
     const result = fizzBuzz(45);
 
     expect(result).toBe('FizzBuzz');
-  });
-
-  it('should return "Fizz" when it receives 102', () => {
-    const result = fizzBuzz(102);
-
-    expect(result).toBe('Fizz');
-  });
-
-  it('should return "Fizz" when it receives -12', () => {
-    const result = fizzBuzz(-12);
-
-    expect(result).toBe('Fizz');
   });
 
   it('should number in string if not divisble by 3 or 5', () => {

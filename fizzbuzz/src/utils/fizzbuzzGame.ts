@@ -3,11 +3,15 @@ export const fizzBuzz = (value: any) => {
     throw new Error('Received is not of type "number"');
   }
 
+  const isMultiple = {
+    ofThree: value % 3 === 0,
+  };
+
   if (value % 5 === 0 && value % 3 === 0) {
     return 'FizzBuzz';
   }
 
-  if (value % 3 === 0) {
+  if (isMultiple.ofThree) {
     return 'Fizz';
   }
 
