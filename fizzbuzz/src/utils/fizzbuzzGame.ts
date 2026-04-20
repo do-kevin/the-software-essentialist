@@ -1,23 +1,21 @@
-export const fizzBuzz = (value: any) => {
-  if (typeof value !== 'number') {
+export const fizzBuzz = (input: any) => {
+  if (typeof input !== 'number') {
     throw new Error('Received is not of type "number"');
   }
 
-  const isMultiple = {
-    ofThree: value % 3 === 0,
+  const isDivisble = {
+    byThree: input % 3 === 0,
+    byFive: input % 5 === 0,
+    get byThreeAndFive() {
+      return this.byThree && this.byFive;
+    },
   };
 
-  if (value % 5 === 0 && value % 3 === 0) {
-    return 'FizzBuzz';
-  }
+  if (isDivisble.byThreeAndFive) return 'FizzBuzz';
 
-  if (isMultiple.ofThree) {
-    return 'Fizz';
-  }
+  if (isDivisble.byThree) return 'Fizz';
 
-  if (value % 5 === 0) {
-    return 'Buzz';
-  }
+  if (isDivisble.byFive) return 'Buzz';
 
-  return value.toString();
+  return input.toString();
 };
