@@ -18,4 +18,16 @@ describe('FizzBuzz', () => {
 
     expect(result).toBe('FizzBuzz');
   });
+
+  it('should return "Fizz" when it receives 9', () => {
+    const result = fizzBuzz(9);
+
+    expect(result).toBe('Fizz');
+  });
+
+  it('should return "43" when it receives 43', () => {
+    const result = fizzBuzz(43);
+
+    expect(result).toBe('43');
+  });
 });

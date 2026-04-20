@@ -11,5 +11,5 @@ export const fizzBuzz = (value: number) => {
     return 'Buzz';
   }
 
-  return null;
+  return value.toString();
 };
