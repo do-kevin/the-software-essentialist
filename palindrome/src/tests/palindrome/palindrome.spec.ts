@@ -11,11 +11,23 @@ describe('Palindrome checker', () => {
     expect(palindromeChecker.isPalindrome('mom')).toBeTruthy();
   });
 
+  it("should be able to tell that 'MoM' is a palindrome", () => {
+    expect(palindromeChecker.isPalindrome('MoM')).toBeTruthy();
+  });
+
+  it("should be able to tell that 'Momx' is not a palindrome", () => {
+    expect(palindromeChecker.isPalindrome('Momx')).toBeFalsy();
+  });
+
+  it("should be able to tell that 'xMomx' is a palindrome", () => {
+    expect(palindromeChecker.isPalindrome('xMomx')).toBeTruthy();
+  });
+
   it("should be able to tell that 'bill' is a not palindrome", () => {
     expect(palindromeChecker.isPalindrome('bill')).toBeFalsy();
   });
 
-  it('should be able to confirm it is a palindrom even when casing is different', () => {
+  it('should be able to confirm it is a palindrome even when casing is different', () => {
     expect(palindromeChecker.isPalindrome('Mom')).toBeTruthy();
   });
 
@@ -23,7 +35,15 @@ describe('Palindrome checker', () => {
     expect(palindromeChecker.isPalindrome('Was It A Rat I Saw')).toBeTruthy();
   });
 
+  it('should be able to tell "Never Odd or Even1" is not palindrome', () => {
+    expect(palindromeChecker.isPalindrome('Never Odd or Even1')).toBeFalsy();
+  });
+
   it('should be able to tell "Never Odd or Even" is palindrome', () => {
     expect(palindromeChecker.isPalindrome('Never Odd or Even')).toBeTruthy();
+  });
+
+  it('should be able to tell "1Never Odd or Even1" is a palindrome', () => {
+    expect(palindromeChecker.isPalindrome('1Never Odd or Even1')).toBeTruthy();
   });
 });
