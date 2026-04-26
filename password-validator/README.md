@@ -1,43 +1,69 @@
-# 🧰 Simple TypeScript Starter | 2024
+# Password Validator
 
-> We talk about a lot of **advanced Node.js and TypeScript** concepts on [the blog](https://khalilstemmler.com), particularly focused around Domain-Driven Design and large-scale enterprise application patterns. However, I received a few emails from readers that were interested in seeing what a basic TypeScript starter project looks like. So I've put together just that.
+## Problem Description
 
-### Features
+- Between 5 & 15 chars long
+- Contains at least 1 digit
+- Contains at least one uppercase letter
+- Return an object containing a boolean result and an errors key. When it's provided with an invalid password, it should contain an error message or type for all errors in occurence. There can be multiple errors at a single time.
 
-- Minimal
-- TypeScript v4
-- Testing with Jest
-- Linting with Eslint and Prettier
-- Pre-commit hooks with Husky
-- VS Code debugger scripts
-- Local development with Nodemon
+#### Find
 
-### Scripts
+What are the responsibilities of a password validator?
 
-#### `npm run start:dev`
+- It is to check people's new password and determine if it's a strong password by checking it through its criteria:
+- so the password must be at least 5 characters long and must not exceed 15 characters
+  - For example: weakpassword
+- it should have at least 1 digit in the password
+  - For example: weakpassword123
+- and finally it should have at least 1 uppercase letter
+  - For example: weakPassword123
 
-Starts the application in development using `nodemon` and `ts-node` to do hot reloading.
+#### Architect
 
-#### `npm run start`
+What could be the shape of the data that gets consumed by the backend and/or frontend ui's form to deny or accept the new password?
 
-Starts the app in production by first building the project with `npm run build`, and then executing the compiled JavaScript at `build/index.js`.
+Failure
 
-#### `npm run build`
+```
+{
+    valid: false,
+    data: null,
+    errors: [
+        {
+            type: "INVALID_LENGTH",
+            message: "The password must be between 5 and 15 characters long."
+        }
+    ],
+}
+```
 
-Builds the app at `build`, cleaning the folder first.
+Success
 
-#### `npm run test`
+```
+{
+    valid: true,
+    data: "weakPassword123",
+    errors: [],
+}
+```
 
-Runs the `jest` tests once.
+#### Automate
 
-#### `npm run test:dev`
+Jest and Typescript scripts are already prepared in this starter template
 
-Run the `jest` tests in watch mode, waiting for file changes.
+#### Specify
 
-#### `npm run prettier-format`
+- `it("it should determine if the password length is out of 5 and 15")`
+- `it("it should see if there's at least a digit in the password")`
+- `it("it should see if there's at least an uppercase letter in the password")`
 
-Format your code.
+#### Test
 
-#### `npm run prettier-watch`
+- Prepare my initial tests using what I've noted down in Architect section and Specify section
+- Fake it to make my tests pass. It's like stubbing
+- Incrementally create code first with obvious implementation and then litte feature by feature delivery
 
-Format your code in watch mode, waiting for file changes.
+#### Refine
+
+Refactor code. If it shows up at least 3 times, could be best time to refactor and also make it readable.
