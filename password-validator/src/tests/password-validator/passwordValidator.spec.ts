@@ -7,14 +7,7 @@ describe('Password Validator', () => {
     passwordValidator = new PasswordValidator();
   });
 
-  it("should determine whether the password's length is outside of 5 and 15", () => {
-    const result = passwordValidator.validate('password123');
-
-    expect(result.data.password.length).toBeGreaterThanOrEqual(5);
-    expect(result.data.password.length).toBeLessThanOrEqual(15);
-  });
-
-  it('should contain error if the password is too short', () => {
+  it('should contain error because the password "arch" is not at least 5 characters long', () => {
     const result = passwordValidator.validate('pass');
 
     expect(result.errors).toContainEqual({
@@ -23,8 +16,17 @@ describe('Password Validator', () => {
     });
   });
 
-  it('should contain error if the password is too long', () => {
-    const result = passwordValidator.validate('longpassword1234');
+  it("should determine the password's length is within range", () => {
+    const result = passwordValidator.validate('password123');
+
+    expect(result.errors).not.toContainEqual({
+      code: 'INVALID_LENGTH',
+      message: 'The password must be between 5 and 15 characters long.',
+    });
+  });
+
+  it("should contain error because the password 'thePhysical1234567' exceeds 15 characters", () => {
+    const result = passwordValidator.validate('thePhysical1234567');
 
     expect(result.errors).toContainEqual({
       code: 'INVALID_LENGTH',
