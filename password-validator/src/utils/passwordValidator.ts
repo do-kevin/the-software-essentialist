@@ -16,6 +16,15 @@ class PasswordValidator {
       });
     }
 
+    console.log(input, input.toLowerCase());
+
+    if (input === input.toLowerCase()) {
+      errors.push({
+        code: 'NO_UPPERCASE',
+        message: 'The password must have at least 1 uppercased letter.',
+      });
+    }
+
     return {
       data: {
         // pretend this is salted

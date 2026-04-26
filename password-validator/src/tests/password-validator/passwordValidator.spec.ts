@@ -42,4 +42,13 @@ describe('Password Validator', () => {
       message: 'The password must have at least 1 uppercased letter.',
     });
   });
+
+  it('the password "maxwell1_C" should not cause an uppercase error', () => {
+    const result = passwordValidator.validate('maxwell1_C');
+
+    expect(result.errors).not.toContainEqual({
+      code: 'NO_UPPERCASE',
+      message: 'The password must have at least 1 uppercased letter.',
+    });
+  });
 });
