@@ -33,4 +33,13 @@ describe('Password Validator', () => {
       message: 'The password must be between 5 and 15 characters long.',
     });
   });
+
+  it('should contain error because the password "maxwell1_c" has no uppercase character', () => {
+    const result = passwordValidator.validate('maxwell1_c');
+
+    expect(result.errors).toContainEqual({
+      code: 'NO_UPPERCASE',
+      message: 'The password must have at least 1 uppercased letter.',
+    });
+  });
 });
