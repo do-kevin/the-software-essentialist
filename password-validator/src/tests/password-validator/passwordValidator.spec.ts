@@ -69,4 +69,16 @@ describe('Password Validator', () => {
       message: 'The password must have at least 1 digit.',
     });
   });
+
+  it('should determine that password "thePhysical12" is a valid password', () => {
+    const result = passwordValidator.validate('thePhysical12');
+
+    expect(result.isValid).toBeTruthy();
+  });
+
+  it('should determine that password "faastr" is an invalid password', () => {
+    const result = passwordValidator.validate('faastr');
+
+    expect(result.isValid).toBeFalsy();
+  });
 });
