@@ -51,4 +51,22 @@ describe('Password Validator', () => {
       message: 'The password must have at least 1 uppercased letter.',
     });
   });
+
+  it('the password "longPassword" should cause an error due to missing digit', () => {
+    const result = passwordValidator.validate('longPassword');
+
+    expect(result.errors).toContainEqual({
+      code: 'MISSING_DIGIT',
+      message: 'The password must have at least 1 digit.',
+    });
+  });
+
+  it('the password "passW0rd123" should pass because it has a digit', () => {
+    const result = passwordValidator.validate('passW0rd123');
+
+    expect(result.errors).not.toContainEqual({
+      code: 'MISSING_DIGIT',
+      message: 'The password must have at least 1 digit.',
+    });
+  });
 });
