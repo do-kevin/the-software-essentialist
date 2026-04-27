@@ -12,6 +12,7 @@ class PasswordValidator {
     const programmersModel = {
       isNotWithinRange: !(input.length >= 5 && input.length <= 15),
       hasNoUppercaseLetter: input === input.toLowerCase(),
+      hasDigit: /[0-9]/.test(input),
     };
 
     if (programmersModel.isNotWithinRange) {
@@ -25,6 +26,13 @@ class PasswordValidator {
       errors.push({
         code: 'NO_UPPERCASE',
         message: 'The password must have at least 1 uppercased letter.',
+      });
+    }
+
+    if (!programmersModel.hasDigit) {
+      errors.push({
+        code: 'MISSING_DIGIT',
+        message: 'The password must have at least 1 digit.',
       });
     }
 
