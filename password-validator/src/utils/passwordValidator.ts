@@ -13,6 +13,7 @@ class PasswordValidator {
       isNotWithinRange: !(input.length >= 5 && input.length <= 15),
       hasNoUppercaseLetter: input === input.toLowerCase(),
       hasDigit: /[0-9]/.test(input),
+      isValid: true,
     };
 
     if (programmersModel.isNotWithinRange) {
@@ -36,7 +37,10 @@ class PasswordValidator {
       });
     }
 
+    programmersModel.isValid = errors.length ? false : true;
+
     return {
+      isValid: programmersModel.isValid,
       data: {
         // pretend this is salted
         password: input,
