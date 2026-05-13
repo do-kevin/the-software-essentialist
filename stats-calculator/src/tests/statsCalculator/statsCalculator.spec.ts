@@ -32,8 +32,8 @@ describe('Stats Calculator', () => {
     expect(result.numOfElements).toBe(6);
   });
 
-  it('should determine the average value is 18.666666666667 from [2, 4, 21, -8, 53, 40]', () => {
+  it('should determine the average value is 18.666666666666668 from [2, 4, 21, -8, 53, 40]', () => {
     const result = statsCalculator.calculate([2, 4, 21, -8, 53, 40]);
-    expect(result.averageVal).toBe(18.666666666667);
+    expect(result.averageVal).toBe(18.666666666666668);
   });
 });

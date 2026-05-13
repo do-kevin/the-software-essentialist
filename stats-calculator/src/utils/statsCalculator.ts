@@ -3,6 +3,7 @@ type StatsCalculatorResult = {
   maxVal: null | number;
   numOfElements: null | number;
   averageVal: null | number;
+  totalVal: number;
 };
 
 class StatsCalculator {
@@ -12,11 +13,18 @@ class StatsCalculator {
       maxVal: null,
       numOfElements: null,
       averageVal: null,
+      totalVal: 0,
     };
+
+    if (!input.length) {
+      return programmersModel;
+    }
 
     programmersModel.numOfElements = input.length;
 
     for (let i = 0; i < input.length - 1; i++) {
+      programmersModel.totalVal += input[i];
+
       if (!programmersModel.minVal) {
         programmersModel.minVal = input[i];
       }
@@ -41,6 +49,11 @@ class StatsCalculator {
         programmersModel.maxVal = input[i + 1];
       }
     }
+
+    programmersModel.totalVal += input[input.length - 1];
+
+    programmersModel.averageVal =
+      programmersModel.totalVal / programmersModel.numOfElements;
 
     return programmersModel;
   };
