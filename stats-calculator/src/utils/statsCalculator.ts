@@ -22,6 +22,18 @@ class StatsCalculator {
       if (input[i + 1] < programmersModel.minVal) {
         programmersModel.minVal = input[i + 1];
       }
+
+      if (!programmersModel.maxVal) {
+        programmersModel.maxVal = input[i];
+      }
+
+      if (input[i] > programmersModel.maxVal) {
+        programmersModel.maxVal = input[i];
+      }
+
+      if (input[i + 1] > programmersModel.maxVal) {
+        programmersModel.maxVal = input[i + 1];
+      }
     }
 
     return programmersModel;
