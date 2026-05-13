@@ -26,4 +26,9 @@ describe('Stats Calculator', () => {
     const result = statsCalculator.calculate([1, 2, 3, 4, 5, -1]);
     expect(result.maxVal).toBe(5);
   });
+
+  it('should count that there is 6 numbers in [2, 4, 21, -8, 53, 40]', () => {
+    const result = statsCalculator.calculate([2, 4, 21, -8, 53, 40]);
+    expect(result.numOfElements).toBe(6);
+  });
 });
