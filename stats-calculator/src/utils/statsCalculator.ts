@@ -12,6 +12,8 @@ class StatsCalculator {
       numOfElements: null,
     };
 
+    programmersModel.numOfElements = input.length;
+
     for (let i = 0; i < input.length - 1; i++) {
       if (!programmersModel.minVal) {
         programmersModel.minVal = input[i];
