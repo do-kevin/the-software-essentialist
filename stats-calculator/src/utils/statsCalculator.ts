@@ -2,6 +2,7 @@ type StatsCalculatorResult = {
   minVal: null | number;
   maxVal: null | number;
   numOfElements: null | number;
+  averageVal: null | number;
 };
 
 class StatsCalculator {
@@ -10,6 +11,7 @@ class StatsCalculator {
       minVal: null,
       maxVal: null,
       numOfElements: null,
+      averageVal: null,
     };
 
     programmersModel.numOfElements = input.length;
