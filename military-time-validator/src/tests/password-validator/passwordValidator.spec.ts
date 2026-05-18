@@ -1,0 +1,84 @@
+import PasswordValidator from '../../utils/passwordValidator';
+
+describe('Password Validator', () => {
+  let passwordValidator: PasswordValidator;
+
+  beforeEach(() => {
+    passwordValidator = new PasswordValidator();
+  });
+
+  it('should contain error because the password "arch" is not at least 5 characters long', () => {
+    const result = passwordValidator.validate('pass');
+
+    expect(result.errors).toContainEqual({
+      code: 'INVALID_LENGTH',
+      message: 'The password must be between 5 and 15 characters long.',
+    });
+  });
+
+  it("should determine the password's length is within range", () => {
+    const result = passwordValidator.validate('password123');
+
+    expect(result.errors).not.toContainEqual({
+      code: 'INVALID_LENGTH',
+      message: 'The password must be between 5 and 15 characters long.',
+    });
+  });
+
+  it("should contain error because the password 'thePhysical1234567' exceeds 15 characters", () => {
+    const result = passwordValidator.validate('thePhysical1234567');
+
+    expect(result.errors).toContainEqual({
+      code: 'INVALID_LENGTH',
+      message: 'The password must be between 5 and 15 characters long.',
+    });
+  });
+
+  it('should contain error because the password "maxwell1_c" has no uppercase character', () => {
+    const result = passwordValidator.validate('maxwell1_c');
+
+    expect(result.errors).toContainEqual({
+      code: 'NO_UPPERCASE',
+      message: 'The password must have at least 1 uppercased letter.',
+    });
+  });
+
+  it('the password "maxwell1_C" should not cause an uppercase error', () => {
+    const result = passwordValidator.validate('maxwell1_C');
+
+    expect(result.errors).not.toContainEqual({
+      code: 'NO_UPPERCASE',
+      message: 'The password must have at least 1 uppercased letter.',
+    });
+  });
+
+  it('the password "longPassword" should cause an error due to missing digit', () => {
+    const result = passwordValidator.validate('longPassword');
+
+    expect(result.errors).toContainEqual({
+      code: 'MISSING_DIGIT',
+      message: 'The password must have at least 1 digit.',
+    });
+  });
+
+  it('the password "passW0rd123" should pass because it has a digit', () => {
+    const result = passwordValidator.validate('passW0rd123');
+
+    expect(result.errors).not.toContainEqual({
+      code: 'MISSING_DIGIT',
+      message: 'The password must have at least 1 digit.',
+    });
+  });
+
+  it('should determine that password "thePhysical12" is a valid password', () => {
+    const result = passwordValidator.validate('thePhysical12');
+
+    expect(result.isValid).toBeTruthy();
+  });
+
+  it('should determine that password "faastr" is an invalid password', () => {
+    const result = passwordValidator.validate('faastr');
+
+    expect(result.isValid).toBeFalsy();
+  });
+});
