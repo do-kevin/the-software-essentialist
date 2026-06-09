@@ -7,8 +7,8 @@ describe('Password Validator', () => {
     militaryTimeValidator = new MilitaryTimeValidator();
   });
 
-  it('"25:00 - 12:23" should should be an invalid military time', () => {
-    const result = militaryTimeValidator.validate('"25:00 - 12:23"');
+  it('should return false if the input is empty', () => {
+    const result = militaryTimeValidator.validate('');
 
     expect(result).toBeFalsy();
   });
