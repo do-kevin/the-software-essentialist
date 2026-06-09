@@ -3,7 +3,7 @@ class PasswordValidator {
     if (!input.length) {
       return false;
     }
-    return false;
+    return true;
   };
 }
 
