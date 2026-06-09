@@ -20,7 +20,7 @@ What are the responsibilities of a military time validator?
 
 What could be the shape of the data that gets consumed by the backend and/or frontend ui's form to report whether or not the given time range is valid? Consult the Transformation Priority Premise (TPP).
 
-TO-DO: Provide explanation.
+The result is going to be a boolean: true or false. It takes in a string.
 
 #### Automate
 
@@ -34,11 +34,10 @@ Jest and Typescript scripts are already prepared in this starter template
 
 #### Test
 
-TO-DO: Rewrite this section due to TTP.
-
 - Prepare my initial tests using what I've noted down in Architect section and Specify section
 - Fake it to make my tests pass. It's like stubbing
 - Incrementally create code first with obvious implementation and then litte feature by feature delivery
+- Because it takes in a string, we need to add further checks on formatting of string.
 
 #### Refine
 
