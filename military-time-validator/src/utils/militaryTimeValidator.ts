@@ -7,7 +7,9 @@ class PasswordValidator {
     const timeString1 = input.trim().replace(' ', '').split(':');
     const timeString2 = input.trim().replace(' ', '').split('-');
 
-    console.log('timeString2: ', timeString2[0]);
+    if (timeString2[0].length <= 0) {
+      return false;
+    }
 
     const isNotLoneMinus =
       !timeString1[1].includes('-') ||
