@@ -30,4 +30,16 @@ describe('Password Validator', () => {
 
     expect(result).toBeFalsy();
   });
+
+  it("should return false if the ' - ' is not in a valid military time format", () => {
+    const result = militaryTimeValidator.validate(' - ');
+
+    expect(result).toBeFalsy();
+  });
+
+  it('should return false if "22:3x - 24:10" is not in a valid military time format', () => {
+    const result = militaryTimeValidator.validate('22:3x - 24:10');
+
+    expect(result).toBeFalsy();
+  });
 });
