@@ -7,6 +7,8 @@ class PasswordValidator {
     const timeString1 = input.trim().replace(' ', '').split(':');
     const timeString2 = input.trim().replace(' ', '').split('-');
 
+    console.log('timeStgring2: ', timeString2[1].trim().split(':')[0]);
+
     if (timeString2[0].length <= 0) {
       return false;
     }
@@ -23,6 +25,14 @@ class PasswordValidator {
       Number.isNaN(Number(timeString1[0])) ||
       Number.isNaN(Number(timeString1[1].split('-')[0]))
     ) {
+      return false;
+    }
+
+    if (Number(timeString1[0]) > 24) {
+      return false;
+    }
+
+    if (Number(timeString2[1].trim().split(':')[0]) > 24) {
       return false;
     }
 
