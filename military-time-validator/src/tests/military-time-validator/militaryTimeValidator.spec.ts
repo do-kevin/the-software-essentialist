@@ -7,39 +7,38 @@ describe('Password Validator', () => {
     militaryTimeValidator = new MilitaryTimeValidator();
   });
 
-  it('should return false if the input is empty', () => {
-    const result = militaryTimeValidator.validate('');
+  const invalidFormatCases = [
+    {
+      input: '',
+      why: 'if the input is empty',
+    },
+    {
+      input: '2t:34 - ',
+      why: "because it's not in a valid military time format",
+    },
+    {
+      input: '22:34 -- ',
+      why: "because it's not in a valid military time format",
+    },
+    {
+      input: '22:3x - ',
+      why: "because it's not in a valid military time format",
+    },
+    {
+      input: ' - ',
+      why: "because it's not in a valid military time format",
+    },
+    {
+      input: '22:3x - 24:10',
+      why: "because it's not in a valid military time format",
+    },
+  ];
 
-    expect(result).toBeFalsy();
-  });
-
-  it("should return false if the '2t:34 - ' is not in a valid military time format", () => {
-    const result = militaryTimeValidator.validate('2t:34 - ');
-
-    expect(result).toBeFalsy();
-  });
-
-  it('should return false if "22:34 -- " is not in a valid military time format', () => {
-    const result = militaryTimeValidator.validate('22:34 -- ');
-
-    expect(result).toBeFalsy();
-  });
-
-  it('should return false if "22:3x - " is not in a valid military time format', () => {
-    const result = militaryTimeValidator.validate('22:3x - ');
-
-    expect(result).toBeFalsy();
-  });
-
-  it("should return false if the ' - ' is not in a valid military time format", () => {
-    const result = militaryTimeValidator.validate(' - ');
-
-    expect(result).toBeFalsy();
-  });
-
-  it('should return false if "22:3x - 24:10" is not in a valid military time format', () => {
-    const result = militaryTimeValidator.validate('22:3x - 24:10');
-
-    expect(result).toBeFalsy();
-  });
+  test.each(invalidFormatCases)(
+    "'$input' should return false $why",
+    ({ input, why }) => {
+      const result = militaryTimeValidator.validate(input);
+      expect(result).toBeFalsy();
+    },
+  );
 });
