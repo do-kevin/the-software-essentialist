@@ -1,4 +1,4 @@
-class PasswordValidator {
+class MilitaryTimeValidator {
   validate = (input: string): boolean => {
     if (!input.length) {
       return false;
@@ -26,8 +26,6 @@ class PasswordValidator {
       return false;
     }
 
-    console.log('timeStgring1: ', timeString1[1].split('-')[0]);
-
     if (Number(timeString1[0]) > 24) {
       return false;
     }
@@ -48,4 +46,4 @@ class PasswordValidator {
   };
 }
 
-export default PasswordValidator;
+export default MilitaryTimeValidator;

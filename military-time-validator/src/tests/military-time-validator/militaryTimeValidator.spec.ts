@@ -65,4 +65,22 @@ describe('Password Validator', () => {
 
     expect(result).toBeFalsy();
   });
+
+  it('should return true because "01:12 - 14:32" is a valid military time format', () => {
+    const result = militaryTimeValidator.validate('22:00 - 23:12');
+
+    expect(result).toBeTruthy();
+  });
+
+  it('should return false because "25:00 - 12:23" is not a valid military time format', () => {
+    const result = militaryTimeValidator.validate('25:00 - 12:23');
+
+    expect(result).toBeFalsy();
+  });
+
+  it('should return true because "22:00 - 23:12" is a valid military time format', () => {
+    const result = militaryTimeValidator.validate('22:00 - 23:12');
+
+    expect(result).toBeTruthy();
+  });
 });
