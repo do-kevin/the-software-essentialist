@@ -7,8 +7,6 @@ class PasswordValidator {
     const timeString1 = input.trim().replace(' ', '').split(':');
     const timeString2 = input.trim().replace(' ', '').split('-');
 
-    console.log('timeStgring2: ', timeString2[1].trim().split(':')[0]);
-
     if (timeString2[0].length <= 0) {
       return false;
     }
@@ -28,11 +26,21 @@ class PasswordValidator {
       return false;
     }
 
+    console.log('timeStgring1: ', timeString1[1].split('-')[0]);
+
     if (Number(timeString1[0]) > 24) {
       return false;
     }
 
     if (Number(timeString2[1].trim().split(':')[0]) > 24) {
+      return false;
+    }
+
+    if (Number(timeString2[1].trim().split(':')[1]) >= 60) {
+      return false;
+    }
+
+    if (Number(timeString1[1].split('-')[0]) >= 60) {
       return false;
     }
 
