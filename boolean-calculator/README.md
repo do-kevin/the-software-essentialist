@@ -14,6 +14,7 @@ What are the responsibilities of a boolean calculator?
 #### Architect
 
 Input will be a string. That string is a boolean expression. The result returned will be a boolean.
+We should not use new Function() because that is a security risk. User can enter malicious code.
 
 #### Automate
 
