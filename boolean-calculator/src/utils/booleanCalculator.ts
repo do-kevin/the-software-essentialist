@@ -13,7 +13,11 @@ class BooleanCalculator {
       });
     }
 
-    console.log('new input: ', input);
+    const checkClosedParenAfterInnerReplacement = input.includes(')');
+
+    if (checkClosedParenAfterInnerReplacement) {
+      throw new Error('Syntax Error: Unmatched closing parenthesis.');
+    }
 
     const operandsAndOperators = input.split(' ');
     const operands = [];
