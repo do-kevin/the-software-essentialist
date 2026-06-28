@@ -25,14 +25,25 @@ class BooleanCalculator {
       return operands[0];
     }
 
-    console.log('opreands: ', operands);
-    console.log('operators: ', operators);
+    let currentOperator = operators[0];
+    let nextOperand = undefined;
+    let result = operands[0];
 
-    if (input === 'TRUE') {
-      return true;
+    for (let j = 0; j < operators.length; j++) {
+      currentOperator = operators[j];
+      nextOperand = operands[j + 1];
+
+      if (nextOperand === undefined) {
+        throw new Error('Missing operand after operator');
+      }
+
+      if (currentOperator === '&&') {
+        console.log(result, nextOperand);
+        result = result && nextOperand;
+      }
     }
 
-    return false;
+    return result;
   };
 }
 
