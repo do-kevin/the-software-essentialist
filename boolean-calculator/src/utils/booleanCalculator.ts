@@ -66,7 +66,21 @@ class BooleanCalculator {
       }
     }
 
-    return result;
+    while (operators.includes('&&')) {
+      const i = operators.indexOf('&&');
+      const andResult = operands[i] && operands[i + 1];
+      operands.splice(i, 2, andResult);
+      operators.splice(i, 1);
+    }
+
+    while (operators.includes('||')) {
+      const i = operators.indexOf('||');
+      const orResult = operands[i] || operands[i + 1];
+      operands.splice(i, 2, orResult);
+      operators.splice(i, 1);
+    }
+
+    return operands[0];
   };
 }
 
