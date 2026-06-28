@@ -4,7 +4,6 @@ class BooleanCalculator {
 
     while (input.includes('(')) {
       input = input.replace(/\(([^()]*)\)/g, (_, insideParens) => {
-        console.log('insideParens: ', insideParens);
         const trimmed = insideParens.trim();
         if (!trimmed) {
           throw new Error('Syntax Error: Empty parentheses.');

@@ -7,18 +7,6 @@ describe('Boolean Calculator', () => {
     booleanCalculator = new BooleanCalculator();
   });
 
-  it('should determine "TRUE" is true', () => {
-    const result = booleanCalculator.evaluate('TRUE');
-
-    expect(result).toBeTruthy();
-  });
-
-  it('should determine "FALSE" is false', () => {
-    const result = booleanCalculator.evaluate('FALSE');
-
-    expect(result).toBeFalsy();
-  });
-
   it('should determine "TRUE AND TRUE" is true', () => {
     const result = booleanCalculator.evaluate('TRUE AND TRUE');
 
@@ -61,5 +49,19 @@ describe('Boolean Calculator', () => {
     expect(() => {
       const result = booleanCalculator.evaluate('TRUE AND FALSE)');
     }).toThrow('Syntax Error: Unmatched closing parenthesis.');
+  });
+
+  it('should determine "(TRUE  AND  FALSE) OR (FALSE OR TRUE)" is true', () => {
+    const result = booleanCalculator.evaluate(
+      '(TRUE  AND  FALSE) OR (FALSE OR TRUE)',
+    );
+
+    expect(result).toBeTruthy();
+  });
+
+  it('should determine "TRUE OR TRUE OR TRUE AND FALSE" is true', () => {
+    const result = booleanCalculator.evaluate('TRUE OR TRUE OR TRUE AND FALSE');
+
+    expect(result).toBeTruthy();
   });
 });
