@@ -12,4 +12,16 @@ describe('Boolean Calculator', () => {
 
     expect(result).toBeTruthy();
   });
+
+  it('should determine "FALSE" is false', () => {
+    const result = booleanCalculator.evaluate('FALSE');
+
+    expect(result).toBeFalsy();
+  });
+
+  it('should determine "TRUE AND TRUE" is true', () => {
+    const result = booleanCalculator.evaluate('TRUE AND TRUE');
+
+    expect(result).toBeTruthy();
+  });
 });
