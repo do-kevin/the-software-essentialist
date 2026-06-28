@@ -2,8 +2,20 @@ class BooleanCalculator {
   evaluate = (input: string): boolean => {
     input = input.replace(/\s+/g, ' ').trim();
 
-    const operandsAndOperators = input.split(' ');
+    while (input.includes('(')) {
+      input = input.replace(/\(([^()]*)\)/g, (_, insideParens) => {
+        console.log('insideParens: ', insideParens);
+        const trimmed = insideParens.trim();
+        if (!trimmed) {
+          throw new Error('Syntax Error: Empty parentheses.');
+        }
+        return this.evaluate(trimmed) ? 'TRUE' : 'FALSE';
+      });
+    }
 
+    console.log('new input: ', input);
+
+    const operandsAndOperators = input.split(' ');
     const operands = [];
     const operators = [];
 
