@@ -8,8 +8,6 @@ class BooleanCalculator {
     const operators = [];
 
     for (let i = 0; i < operandsAndOperators.length; i++) {
-      console.log('i: ', i);
-
       if (operandsAndOperators[i] === 'TRUE') {
         operands.push(true);
       }
@@ -18,6 +16,10 @@ class BooleanCalculator {
       }
       if (operandsAndOperators[i] === 'AND') {
         operators.push('&&');
+      }
+
+      if (operandsAndOperators[i] === 'OR') {
+        operators.push('||');
       }
     }
 
@@ -40,6 +42,11 @@ class BooleanCalculator {
       if (currentOperator === '&&') {
         console.log(result, nextOperand);
         result = result && nextOperand;
+      }
+
+      if (currentOperator === '||') {
+        console.log(result, nextOperand);
+        result = result || nextOperand;
       }
     }
 

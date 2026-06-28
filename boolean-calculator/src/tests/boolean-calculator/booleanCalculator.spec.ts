@@ -31,9 +31,9 @@ describe('Boolean Calculator', () => {
     expect(result).toBeFalsy();
   });
 
-  it('should determine "TRUE OR FALSE" is false', () => {
+  it('should determine "TRUE OR FALSE" is true', () => {
     const result = booleanCalculator.evaluate('TRUE OR FALSE');
 
-    expect(result).toBeFalsy();
+    expect(result).toBeTruthy();
   });
 });
