@@ -18,6 +18,12 @@ class BooleanCalculator {
       throw new Error('Syntax Error: Unmatched closing parenthesis.');
     }
 
+    while (/NOT (TRUE|FALSE)/.test(input)) {
+      input = input.replace(/NOT (TRUE|FALSE)/g, (_, operand) => {
+        return operand === 'TRUE' ? 'FALSE' : 'TRUE';
+      });
+    }
+
     const operandsAndOperators = input.split(' ');
     const operands = [];
     const operators = [];
