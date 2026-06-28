@@ -8,7 +8,7 @@ describe('Boolean Calculator', () => {
   });
 
   it('should determine "TRUE" is true', () => {
-    const result = booleanCalculator.calculate('');
+    const result = booleanCalculator.evaluate('TRUE');
 
     expect(result).toBeTruthy();
   });

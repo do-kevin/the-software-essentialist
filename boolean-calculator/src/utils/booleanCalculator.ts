@@ -1,5 +1,9 @@
 class BooleanCalculator {
-  calculate = (_input: string): boolean => {
+  evaluate = (input: string): boolean => {
+    if (input === 'TRUE') {
+      return true;
+    }
+
     return false;
   };
 }
