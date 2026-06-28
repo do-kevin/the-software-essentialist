@@ -7,28 +7,34 @@ describe('Boolean Calculator', () => {
     booleanCalculator = new BooleanCalculator();
   });
 
-  it('should determine "TRUE AND TRUE" is true', () => {
-    const result = booleanCalculator.evaluate('TRUE AND TRUE');
+  const andOperatorCases = [
+    {
+      input: 'TRUE AND TRUE',
+      expectedResult: true,
+    },
+    {
+      input: 'TRUE AND FALSE',
+      expectedResult: false,
+    },
+    {
+      input: 'TRUE AND TRUE AND FALSE',
+      expectedResult: false,
+    },
+  ];
 
-    expect(result).toBeTruthy();
-  });
+  test.each(andOperatorCases)(
+    "should determine '$input' is $expectedResult",
+    ({ input, expectedResult }) => {
+      const result = booleanCalculator.evaluate(input);
 
-  it('should determine "TRUE AND FALSE" is false', () => {
-    const result = booleanCalculator.evaluate('TRUE AND FALSE');
-
-    expect(result).toBeFalsy();
-  });
+      expectedResult ? expect(result).toBeTruthy() : expect(result).toBeFalsy();
+    },
+  );
 
   it('should determine "TRUE OR FALSE" is true', () => {
     const result = booleanCalculator.evaluate('TRUE OR FALSE');
 
     expect(result).toBeTruthy();
-  });
-
-  it('should determine "TRUE AND TRUE AND FALSE" is false', () => {
-    const result = booleanCalculator.evaluate('TRUE AND TRUE AND FALSE');
-
-    expect(result).toBeFalsy();
   });
 
   it('should determine "TRUE AND TRUE AND FALSE OR FALSE" is false', () => {
