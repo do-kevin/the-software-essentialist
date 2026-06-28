@@ -9,6 +9,7 @@ class BooleanCalculator {
 
     for (let i = 0; i < operandsAndOperators.length; i++) {
       console.log('i: ', i);
+
       if (operandsAndOperators[i] === 'TRUE') {
         operands.push(true);
       }
@@ -18,6 +19,10 @@ class BooleanCalculator {
       if (operandsAndOperators[i] === 'AND') {
         operators.push('&&');
       }
+    }
+
+    if (operands.length <= 1) {
+      return operands[0];
     }
 
     console.log('opreands: ', operands);
