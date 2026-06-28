@@ -70,4 +70,18 @@ describe('Boolean Calculator', () => {
 
     expect(result).toBeTruthy();
   });
+
+  it('should determine "(TRUE OR TRUE OR TRUE) AND FALSE" is true', () => {
+    const result = booleanCalculator.evaluate(
+      '(TRUE OR TRUE OR TRUE) AND FALSE',
+    );
+
+    expect(result).toBeFalsy();
+  });
+
+  it('should determine "NOT (TRUE AND TRUE)" is true', () => {
+    const result = booleanCalculator.evaluate('NOT (TRUE AND TRUE)');
+
+    expect(result).toBeFalsy();
+  });
 });
