@@ -36,4 +36,10 @@ describe('Boolean Calculator', () => {
 
     expect(result).toBeTruthy();
   });
+
+  it('should determine "TRUE AND TRUE AND FALSE" is false', () => {
+    const result = booleanCalculator.evaluate('"TRUE AND TRUE AND FALSE');
+
+    expect(result).toBeFalsy();
+  });
 });
