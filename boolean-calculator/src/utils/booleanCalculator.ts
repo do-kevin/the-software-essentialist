@@ -10,17 +10,23 @@ class BooleanCalculator {
     for (let i = 0; i < operandsAndOperators.length; i++) {
       if (operandsAndOperators[i] === 'TRUE') {
         operands.push(true);
-      }
-      if (operandsAndOperators[i] === 'FALSE') {
+      } else if (operandsAndOperators[i] === 'FALSE') {
         operands.push(false);
-      }
-      if (operandsAndOperators[i] === 'AND') {
+      } else if (operandsAndOperators[i] === 'AND') {
         operators.push('&&');
-      }
-
-      if (operandsAndOperators[i] === 'OR') {
+      } else if (operandsAndOperators[i] === 'OR') {
         operators.push('||');
+      } else {
+        throw new Error(
+          `Syntax Error: Unrecognized token "${operandsAndOperators[i]}"`,
+        );
       }
+    }
+
+    console.log(operands);
+
+    if (operands.length === 0) {
+      throw new Error('Invalid expression: No operands provided.');
     }
 
     if (operands.length <= 1) {

@@ -50,4 +50,10 @@ describe('Boolean Calculator', () => {
 
     expect(result).toBeFalsy();
   });
+
+  it('should determine "TRUE AND (FALSE OR TRUE)" is true', () => {
+    const result = booleanCalculator.evaluate('TRUE AND (FALSE OR TRUE)');
+
+    expect(result).toBeTruthy();
+  });
 });
