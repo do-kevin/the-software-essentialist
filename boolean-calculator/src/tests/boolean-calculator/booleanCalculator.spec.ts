@@ -56,4 +56,10 @@ describe('Boolean Calculator', () => {
 
     expect(result).toBeTruthy();
   });
+
+  it('should throw error when "TRUE AND FALSE)" is inputted', () => {
+    expect(() => {
+      const result = booleanCalculator.evaluate('TRUE AND FALSE)');
+    }).toThrow('Syntax Error: Unmatched closing parenthesis.');
+  });
 });

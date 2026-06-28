@@ -29,13 +29,10 @@ class BooleanCalculator {
       } else if (operandsAndOperators[i] === 'OR') {
         operators.push('||');
       } else {
-        throw new Error(
-          `Syntax Error: Unrecognized token "${operandsAndOperators[i]}"`,
-        );
+        const errorMessage = `Syntax Error: Unrecognized token "${operandsAndOperators[i]}"`;
+        throw new Error(errorMessage);
       }
     }
-
-    console.log(operands);
 
     if (operands.length === 0) {
       throw new Error('Invalid expression: No operands provided.');
@@ -58,12 +55,10 @@ class BooleanCalculator {
       }
 
       if (currentOperator === '&&') {
-        console.log(result, nextOperand);
         result = result && nextOperand;
       }
 
       if (currentOperator === '||') {
-        console.log(result, nextOperand);
         result = result || nextOperand;
       }
     }
