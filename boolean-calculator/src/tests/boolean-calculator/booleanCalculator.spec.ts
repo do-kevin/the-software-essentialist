@@ -64,4 +64,10 @@ describe('Boolean Calculator', () => {
 
     expect(result).toBeTruthy();
   });
+
+  it('should determine "TRUE OR FALSE AND NOT FALSE" is true', () => {
+    const result = booleanCalculator.evaluate('TRUE OR FALSE AND NOT FALSE');
+
+    expect(result).toBeTruthy();
+  });
 });
