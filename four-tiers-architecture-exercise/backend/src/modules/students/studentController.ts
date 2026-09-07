@@ -1,13 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
+import { ErrorHandler } from "../../shared/errorExceptionHandler";
 
 export class StudentController {
   private router: Router;
 
-  constructor(private db: PrismaClient) {
+  constructor(private db: PrismaClient, private errorHandler: ErrorHandler) {
     this.router = Router();
     this.setupRoutes();
+    this.setupErrorHandler();
   }
 
   getRouter = () => {
@@ -22,7 +24,11 @@ export class StudentController {
     this.router.get("/:id/grades", this.getStudentGrades);
   }
 
-  getStudents = async (req: Request, res: Response, _next: NextFunction) => {
+  private setupErrorHandler() {
+    this.router.use(this.errorHandler);
+  }
+
+  getStudents = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const students = await this.db.student.findMany({
         include: {
@@ -40,13 +46,11 @@ export class StudentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  getStudentById = async (req: Request, res: Response) => {
+  getStudentById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       if (!isUUID(id)) {
@@ -81,13 +85,11 @@ export class StudentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  createStudent = async (req: Request, res: Response) => {
+  createStudent = async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (isMissingKeys(req.body, ["name"])) {
         return res.status(400).json({
@@ -111,13 +113,15 @@ export class StudentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  getStudentAssignments = async (req: Request, res: Response) => {
+  getStudentAssignments = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { id } = req.params;
       if (!isUUID(id)) {
@@ -128,7 +132,6 @@ export class StudentController {
         });
       }
 
-      // check if student exists
       const student = await this.db.student.findUnique({
         where: {
           id,
@@ -159,13 +162,15 @@ export class StudentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  getStudentGrades = async (req: Request, res: Response) => {
+  getStudentGrades = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { id } = req.params;
       if (!isUUID(id)) {
@@ -176,7 +181,6 @@ export class StudentController {
         });
       }
 
-      // check if student exists
       const student = await this.db.student.findUnique({
         where: {
           id,
@@ -210,9 +214,7 @@ export class StudentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 }

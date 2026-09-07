@@ -1,13 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
+import { ErrorHandler } from "../../shared/errorExceptionHandler";
 
 export class ClassController {
   private router: Router;
 
-  constructor(private db: PrismaClient) {
+  constructor(private db: PrismaClient, private errorHandler: ErrorHandler) {
     this.router = Router();
     this.setupRoutes();
+    this.setupErrorHandler();
   }
 
   getRouter = () => {
@@ -20,7 +22,11 @@ export class ClassController {
     this.router.post("/class-enrollments", this.postStudentToClass);
   }
 
-  createClass = async (req: Request, res: Response) => {
+  private setupErrorHandler() {
+    this.router.use(this.errorHandler);
+  }
+
+  createClass = async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (isMissingKeys(req.body, ["name"])) {
         return res.status(400).json({
@@ -42,13 +48,15 @@ export class ClassController {
         .status(201)
         .json({ error: undefined, data: parseForResponse(cls), success: true });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  getAssignmentsFromClass = async (req: Request, res: Response) => {
+  getAssignmentsFromClass = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const { id } = req.params;
       if (!isUUID(id)) {
@@ -59,7 +67,6 @@ export class ClassController {
         });
       }
 
-      // check if class exists
       const cls = await this.db.class.findUnique({
         where: {
           id,
@@ -90,13 +97,15 @@ export class ClassController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  postStudentToClass = async (req: Request, res: Response) => {
+  postStudentToClass = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (isMissingKeys(req.body, ["studentId", "classId"])) {
         return res.status(400).json({
@@ -166,9 +175,7 @@ export class ClassController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 }

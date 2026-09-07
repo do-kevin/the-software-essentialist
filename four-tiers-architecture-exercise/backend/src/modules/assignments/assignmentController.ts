@@ -1,13 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
+import { ErrorHandler } from "../../shared/errorExceptionHandler";
 
 export class AssignmentController {
   private router: Router;
 
-  constructor(private db: PrismaClient) {
+  constructor(private db: PrismaClient, private errorHandler: ErrorHandler) {
     this.router = Router();
     this.setupRoutes();
+    this.setupErrorHandler();
   }
 
   getRouter = () => {
@@ -25,7 +27,15 @@ export class AssignmentController {
     this.router.post("/student-assignments/grade", this.setAssignmentGrade);
   }
 
-  createAssignment = async (req: Request, res: Response) => {
+  private setupErrorHandler() {
+    this.router.use(this.errorHandler);
+  }
+
+  createAssignment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (isMissingKeys(req.body, ["classId", "title"])) {
         return res.status(400).json({
@@ -50,13 +60,11 @@ export class AssignmentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  getAssignment = async (req: Request, res: Response) => {
+  getAssignment = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       if (!isUUID(id)) {
@@ -90,13 +98,15 @@ export class AssignmentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  postStudentToAssignment = async (req: Request, res: Response) => {
+  postStudentToAssignment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (isMissingKeys(req.body, ["studentId", "assignmentId"])) {
         return res.status(400).json({
@@ -108,7 +118,6 @@ export class AssignmentController {
 
       const { studentId, assignmentId, grade } = req.body;
 
-      // check if student exists
       const student = await this.db.student.findUnique({
         where: {
           id: studentId,
@@ -123,7 +132,6 @@ export class AssignmentController {
         });
       }
 
-      // check if assignment exists
       const assignment = await this.db.assignment.findUnique({
         where: {
           id: assignmentId,
@@ -151,13 +159,15 @@ export class AssignmentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  setStudentAssignmentSubmission = async (req: Request, res: Response) => {
+  setStudentAssignmentSubmission = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (isMissingKeys(req.body, ["id"])) {
         return res.status(400).json({
@@ -198,13 +208,15 @@ export class AssignmentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 
-  setAssignmentGrade = async (req: Request, res: Response) => {
+  setAssignmentGrade = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (isMissingKeys(req.body, ["id", "grade"])) {
         return res.status(400).json({
@@ -253,9 +265,7 @@ export class AssignmentController {
         success: true,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: Errors.ServerError, data: undefined, success: false });
+      next(error);
     }
   };
 }

@@ -8,6 +8,13 @@ import {
   StudentNotFoundException,
 } from "./exceptions";
 
+export type ErrorHandler = (
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Response;
+
 export class ErrorExceptionHandler {
   public handle(
     error: Error,
