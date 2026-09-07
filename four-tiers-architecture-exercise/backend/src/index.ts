@@ -1,5 +1,4 @@
 import express from "express";
-import { prisma } from "./database";
 // import { Student, Class, Assignment, StudentAssignment } from "@prisma/client";
 
 import { AssignmentController } from "./modules/assignments/assignmentController";
@@ -41,7 +40,8 @@ const classController = new ClassController(
 app.use("/classes", classController.getRouter());
 
 const assignmentController = new AssignmentController(
-  prisma,
+  assignmentService,
+  studentService,
   errorExceptionHandler.handle
 );
 app.use("/assignments", assignmentController.getRouter());

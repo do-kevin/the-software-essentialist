@@ -1,12 +1,17 @@
-import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
+import { AssignmentService } from "./assignmentService";
+import { StudentService } from "../students/studentService";
 
 export class AssignmentController {
   private router: Router;
 
-  constructor(private db: PrismaClient, private errorHandler: ErrorHandler) {
+  constructor(
+    private assignmentService: AssignmentService,
+    private studentService: StudentService,
+    private errorHandler: ErrorHandler
+  ) {
     this.router = Router();
     this.setupRoutes();
     this.setupErrorHandler();
@@ -47,11 +52,9 @@ export class AssignmentController {
 
       const { classId, title } = req.body;
 
-      const assignment = await this.db.assignment.create({
-        data: {
-          classId,
-          title,
-        },
+      const assignment = await this.assignmentService.createNewAssignment({
+        classId,
+        title,
       });
 
       res.status(201).json({
@@ -74,15 +77,7 @@ export class AssignmentController {
           success: false,
         });
       }
-      const assignment = await this.db.assignment.findUnique({
-        include: {
-          class: true,
-          studentTasks: true,
-        },
-        where: {
-          id,
-        },
-      });
+      const assignment = await this.assignmentService.findAssignment(id);
 
       if (!assignment) {
         return res.status(404).json({
@@ -118,11 +113,7 @@ export class AssignmentController {
 
       const { studentId, assignmentId, grade } = req.body;
 
-      const student = await this.db.student.findUnique({
-        where: {
-          id: studentId,
-        },
-      });
+      const student = await this.studentService.findStudentExists(studentId);
 
       if (!student) {
         return res.status(404).json({
@@ -132,11 +123,9 @@ export class AssignmentController {
         });
       }
 
-      const assignment = await this.db.assignment.findUnique({
-        where: {
-          id: assignmentId,
-        },
-      });
+      const assignment = await this.assignmentService.findAssignmentExists(
+        assignmentId
+      );
 
       if (!assignment) {
         return res.status(404).json({
@@ -146,12 +135,11 @@ export class AssignmentController {
         });
       }
 
-      const studentAssignment = await this.db.studentAssignment.create({
-        data: {
+      const studentAssignment =
+        await this.assignmentService.createStudentAssignment({
           studentId,
           assignmentId,
-        },
-      });
+        });
 
       res.status(201).json({
         error: undefined,
@@ -179,11 +167,8 @@ export class AssignmentController {
 
       const { id } = req.body;
 
-      const studentAssignment = await this.db.studentAssignment.findUnique({
-        where: {
-          id,
-        },
-      });
+      const studentAssignment =
+        await this.assignmentService.findStudentAssignment(id);
 
       if (!studentAssignment) {
         return res.status(404).json({
@@ -193,14 +178,8 @@ export class AssignmentController {
         });
       }
 
-      const studentAssignmentUpdated = await this.db.studentAssignment.update({
-        where: {
-          id,
-        },
-        data: {
-          status: "submitted",
-        },
-      });
+      const studentAssignmentUpdated =
+        await this.assignmentService.updateAssignmentToSubmit(id);
 
       res.status(200).json({
         error: undefined,
@@ -236,11 +215,8 @@ export class AssignmentController {
         });
       }
 
-      const studentAssignment = await this.db.studentAssignment.findUnique({
-        where: {
-          id,
-        },
-      });
+      const studentAssignment =
+        await this.assignmentService.findStudentAssignment(id);
 
       if (!studentAssignment) {
         return res.status(404).json({
@@ -250,14 +226,11 @@ export class AssignmentController {
         });
       }
 
-      const studentAssignmentUpdated = await this.db.studentAssignment.update({
-        where: {
+      const studentAssignmentUpdated =
+        await this.assignmentService.updateAssignmentGrade({
           id,
-        },
-        data: {
           grade,
-        },
-      });
+        });
 
       res.status(200).json({
         error: undefined,
