@@ -1,13 +1,28 @@
 import { PrismaClient } from "@prisma/client";
-import { prisma } from "../../database";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
 
-class StudentController {
-  constructor(private db: PrismaClient) {}
+export class StudentController {
+  private router: Router;
 
-  // GET all students
-  getStudents = async (req: Request, res: Response) => {
+  constructor(private db: PrismaClient) {
+    this.router = Router();
+    this.setupRoutes();
+  }
+
+  getRouter = () => {
+    return this.router;
+  };
+
+  private setupRoutes() {
+    this.router.get("/", this.getStudents);
+    this.router.get("/:id", this.getStudentById);
+    this.router.post("/", this.createStudent);
+    this.router.get("/:id/assignments", this.getStudentAssignments);
+    this.router.get("/:id/grades", this.getStudentGrades);
+  }
+
+  getStudents = async (req: Request, res: Response, _next: NextFunction) => {
     try {
       const students = await this.db.student.findMany({
         include: {
@@ -31,7 +46,6 @@ class StudentController {
     }
   };
 
-  // GET a student by id
   getStudentById = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -73,7 +87,6 @@ class StudentController {
     }
   };
 
-  // POST student created
   createStudent = async (req: Request, res: Response) => {
     try {
       if (isMissingKeys(req.body, ["name"])) {
@@ -104,7 +117,6 @@ class StudentController {
     }
   };
 
-  // GET all student submitted assignments
   getStudentAssignments = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -153,7 +165,6 @@ class StudentController {
     }
   };
 
-  // GET all student grades
   getStudentGrades = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -205,5 +216,3 @@ class StudentController {
     }
   };
 }
-
-export default new StudentController(prisma);

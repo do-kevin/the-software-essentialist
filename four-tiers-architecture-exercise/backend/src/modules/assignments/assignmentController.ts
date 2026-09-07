@@ -1,10 +1,29 @@
 import { PrismaClient } from "@prisma/client";
-import { prisma } from "../../database";
-import { Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
 
-class AssignmentController {
-  constructor(private db: PrismaClient) {}
+export class AssignmentController {
+  private router: Router;
+
+  constructor(private db: PrismaClient) {
+    this.router = Router();
+    this.setupRoutes();
+  }
+
+  getRouter = () => {
+    return this.router;
+  };
+
+  private setupRoutes() {
+    this.router.post("/", this.createAssignment);
+    this.router.get("/:id", this.getAssignment);
+    this.router.post("/student-assignments", this.postStudentToAssignment);
+    this.router.post(
+      "/student-assignments/submit",
+      this.setStudentAssignmentSubmission
+    );
+    this.router.post("/student-assignments/grade", this.setAssignmentGrade);
+  }
 
   createAssignment = async (req: Request, res: Response) => {
     try {
@@ -77,7 +96,6 @@ class AssignmentController {
     }
   };
 
-  // POST student assigned to assignment
   postStudentToAssignment = async (req: Request, res: Response) => {
     try {
       if (isMissingKeys(req.body, ["studentId", "assignmentId"])) {
@@ -139,7 +157,6 @@ class AssignmentController {
     }
   };
 
-  // POST student submitted assignment
   setStudentAssignmentSubmission = async (req: Request, res: Response) => {
     try {
       if (isMissingKeys(req.body, ["id"])) {
@@ -152,7 +169,6 @@ class AssignmentController {
 
       const { id } = req.body;
 
-      // check if student assignment exists
       const studentAssignment = await this.db.studentAssignment.findUnique({
         where: {
           id,
@@ -188,7 +204,6 @@ class AssignmentController {
     }
   };
 
-  // POST student assignment graded
   setAssignmentGrade = async (req: Request, res: Response) => {
     try {
       if (isMissingKeys(req.body, ["id", "grade"])) {
@@ -201,7 +216,6 @@ class AssignmentController {
 
       const { id, grade } = req.body;
 
-      // validate grade
       if (!["A", "B", "C", "D"].includes(grade)) {
         return res.status(400).json({
           error: Errors.ValidationError,
@@ -210,7 +224,6 @@ class AssignmentController {
         });
       }
 
-      // check if student assignment exists
       const studentAssignment = await this.db.studentAssignment.findUnique({
         where: {
           id,
@@ -246,5 +259,3 @@ class AssignmentController {
     }
   };
 }
-
-export default new AssignmentController(prisma);

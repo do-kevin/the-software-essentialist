@@ -15,8 +15,8 @@ export class ClassController {
   };
 
   private setupRoutes() {
-    this.router.post("/classes", this.createClass);
-    this.router.get("/classes/:id/assignments", this.getAssignmentsFromClass);
+    this.router.post("/", this.createClass);
+    this.router.get("/:id/assignments", this.getAssignmentsFromClass);
     this.router.post("/class-enrollments", this.postStudentToClass);
   }
 
@@ -108,7 +108,6 @@ export class ClassController {
 
       const { studentId, classId } = req.body;
 
-      // check if student exists
       const student = await this.db.student.findUnique({
         where: {
           id: studentId,
@@ -123,14 +122,12 @@ export class ClassController {
         });
       }
 
-      // check if class exists
       const cls = await this.db.class.findUnique({
         where: {
           id: classId,
         },
       });
 
-      // check if student is already enrolled in class
       const duplicatedClassEnrollment = await this.db.classEnrollment.findFirst(
         {
           where: {
