@@ -1,10 +1,24 @@
 import { PrismaClient } from "@prisma/client";
-import { prisma } from "../../database";
-import { Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
 
-class ClassController {
-  constructor(private db: PrismaClient) {}
+export class ClassController {
+  private router: Router;
+
+  constructor(private db: PrismaClient) {
+    this.router = Router();
+    this.setupRoutes();
+  }
+
+  getRouter = () => {
+    return this.router;
+  };
+
+  private setupRoutes() {
+    this.router.post("/classes", this.createClass);
+    this.router.get("/classes/:id/assignments", this.getAssignmentsFromClass);
+    this.router.post("/class-enrollments", this.postStudentToClass);
+  }
 
   createClass = async (req: Request, res: Response) => {
     try {
@@ -161,5 +175,3 @@ class ClassController {
     }
   };
 }
-
-export default new ClassController(prisma);

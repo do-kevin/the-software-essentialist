@@ -4,8 +4,9 @@ import { prisma } from "./database";
 // import { error } from "console";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "./shared";
 import StudentController from "./modules/students/studentController";
-import ClassController from "./modules/classes/classController";
+
 import AssignmentController from "./modules/assignments/assignmentController";
+import { ClassController } from "./modules/classes/classController";
 
 const cors = require("cors");
 const app = express();
@@ -21,9 +22,10 @@ router.get("/students/:id", StudentController.getStudentById);
 router.post("/students", StudentController.createStudent);
 router.get("/student/:id/assignments", StudentController.getStudentAssignments);
 router.get("/student/:id/grades", StudentController.getStudentGrades);
-router.post("/classes", ClassController.createClass);
-router.get("/classes/:id/assignments", ClassController.getAssignmentsFromClass);
-router.post("/class-enrollments", ClassController.postStudentToClass);
+
+const classController = new ClassController(prisma);
+app.use("/classes", classController.getRouter());
+
 router.post("/assignments", AssignmentController.createAssignment);
 router.get("/assignments/:id", AssignmentController.getAssignment);
 router.post(
