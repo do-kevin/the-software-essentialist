@@ -9,7 +9,7 @@ class StudentController {
   // GET all students
   getStudents = async (req: Request, res: Response) => {
     try {
-      const students = await prisma.student.findMany({
+      const students = await this.db.student.findMany({
         include: {
           classes: true,
           assignments: true,
@@ -42,7 +42,7 @@ class StudentController {
           success: false,
         });
       }
-      const student = await prisma.student.findUnique({
+      const student = await this.db.student.findUnique({
         where: {
           id,
         },
@@ -117,7 +117,7 @@ class StudentController {
       }
 
       // check if student exists
-      const student = await prisma.student.findUnique({
+      const student = await this.db.student.findUnique({
         where: {
           id,
         },
@@ -131,7 +131,7 @@ class StudentController {
         });
       }
 
-      const studentAssignments = await prisma.studentAssignment.findMany({
+      const studentAssignments = await this.db.studentAssignment.findMany({
         where: {
           studentId: id,
           status: "submitted",
@@ -166,7 +166,7 @@ class StudentController {
       }
 
       // check if student exists
-      const student = await prisma.student.findUnique({
+      const student = await this.db.student.findUnique({
         where: {
           id,
         },
@@ -180,7 +180,7 @@ class StudentController {
         });
       }
 
-      const studentAssignments = await prisma.studentAssignment.findMany({
+      const studentAssignments = await this.db.studentAssignment.findMany({
         where: {
           studentId: id,
           status: "submitted",

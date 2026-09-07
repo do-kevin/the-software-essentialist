@@ -18,7 +18,7 @@ class AssignmentController {
 
       const { classId, title } = req.body;
 
-      const assignment = await prisma.assignment.create({
+      const assignment = await this.db.assignment.create({
         data: {
           classId,
           title,
@@ -47,7 +47,7 @@ class AssignmentController {
           success: false,
         });
       }
-      const assignment = await prisma.assignment.findUnique({
+      const assignment = await this.db.assignment.findUnique({
         include: {
           class: true,
           studentTasks: true,
@@ -91,7 +91,7 @@ class AssignmentController {
       const { studentId, assignmentId, grade } = req.body;
 
       // check if student exists
-      const student = await prisma.student.findUnique({
+      const student = await this.db.student.findUnique({
         where: {
           id: studentId,
         },
@@ -106,7 +106,7 @@ class AssignmentController {
       }
 
       // check if assignment exists
-      const assignment = await prisma.assignment.findUnique({
+      const assignment = await this.db.assignment.findUnique({
         where: {
           id: assignmentId,
         },
@@ -120,7 +120,7 @@ class AssignmentController {
         });
       }
 
-      const studentAssignment = await prisma.studentAssignment.create({
+      const studentAssignment = await this.db.studentAssignment.create({
         data: {
           studentId,
           assignmentId,
@@ -153,7 +153,7 @@ class AssignmentController {
       const { id } = req.body;
 
       // check if student assignment exists
-      const studentAssignment = await prisma.studentAssignment.findUnique({
+      const studentAssignment = await this.db.studentAssignment.findUnique({
         where: {
           id,
         },
@@ -167,7 +167,7 @@ class AssignmentController {
         });
       }
 
-      const studentAssignmentUpdated = await prisma.studentAssignment.update({
+      const studentAssignmentUpdated = await this.db.studentAssignment.update({
         where: {
           id,
         },
@@ -211,7 +211,7 @@ class AssignmentController {
       }
 
       // check if student assignment exists
-      const studentAssignment = await prisma.studentAssignment.findUnique({
+      const studentAssignment = await this.db.studentAssignment.findUnique({
         where: {
           id,
         },
@@ -225,7 +225,7 @@ class AssignmentController {
         });
       }
 
-      const studentAssignmentUpdated = await prisma.studentAssignment.update({
+      const studentAssignmentUpdated = await this.db.studentAssignment.update({
         where: {
           id,
         },

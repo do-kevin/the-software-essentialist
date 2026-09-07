@@ -18,7 +18,7 @@ class ClassController {
 
       const { name } = req.body;
 
-      const cls = await prisma.class.create({
+      const cls = await this.db.class.create({
         data: {
           name,
         },
@@ -46,7 +46,7 @@ class ClassController {
       }
 
       // check if class exists
-      const cls = await prisma.class.findUnique({
+      const cls = await this.db.class.findUnique({
         where: {
           id,
         },
@@ -60,7 +60,7 @@ class ClassController {
         });
       }
 
-      const assignments = await prisma.assignment.findMany({
+      const assignments = await this.db.assignment.findMany({
         where: {
           classId: id,
         },
@@ -95,7 +95,7 @@ class ClassController {
       const { studentId, classId } = req.body;
 
       // check if student exists
-      const student = await prisma.student.findUnique({
+      const student = await this.db.student.findUnique({
         where: {
           id: studentId,
         },
@@ -110,19 +110,21 @@ class ClassController {
       }
 
       // check if class exists
-      const cls = await prisma.class.findUnique({
+      const cls = await this.db.class.findUnique({
         where: {
           id: classId,
         },
       });
 
       // check if student is already enrolled in class
-      const duplicatedClassEnrollment = await prisma.classEnrollment.findFirst({
-        where: {
-          studentId,
-          classId,
-        },
-      });
+      const duplicatedClassEnrollment = await this.db.classEnrollment.findFirst(
+        {
+          where: {
+            studentId,
+            classId,
+          },
+        }
+      );
 
       if (duplicatedClassEnrollment) {
         return res.status(400).json({
@@ -140,7 +142,7 @@ class ClassController {
         });
       }
 
-      const classEnrollment = await prisma.classEnrollment.create({
+      const classEnrollment = await this.db.classEnrollment.create({
         data: {
           studentId,
           classId,
