@@ -1,12 +1,19 @@
-import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
+import { ClassService } from "./classService";
+import { AssignmentService } from "../assignments/assignmentService";
+import { StudentService } from "../students/studentService";
 
 export class ClassController {
   private router: Router;
 
-  constructor(private db: PrismaClient, private errorHandler: ErrorHandler) {
+  constructor(
+    private classService: ClassService,
+    private assignmentService: AssignmentService,
+    private studentService: StudentService,
+    private errorHandler: ErrorHandler
+  ) {
     this.router = Router();
     this.setupRoutes();
     this.setupErrorHandler();
@@ -38,11 +45,7 @@ export class ClassController {
 
       const { name } = req.body;
 
-      const cls = await this.db.class.create({
-        data: {
-          name,
-        },
-      });
+      const cls = await this.classService.createClass(name);
 
       res
         .status(201)
@@ -67,11 +70,7 @@ export class ClassController {
         });
       }
 
-      const cls = await this.db.class.findUnique({
-        where: {
-          id,
-        },
-      });
+      const cls = await this.classService.findClassById(id);
 
       if (!cls) {
         return res.status(404).json({
@@ -81,15 +80,8 @@ export class ClassController {
         });
       }
 
-      const assignments = await this.db.assignment.findMany({
-        where: {
-          classId: id,
-        },
-        include: {
-          class: true,
-          studentTasks: true,
-        },
-      });
+      const assignments =
+        await this.assignmentService.findManyAssignmentsByClassId(id);
 
       res.status(200).json({
         error: undefined,
@@ -117,11 +109,7 @@ export class ClassController {
 
       const { studentId, classId } = req.body;
 
-      const student = await this.db.student.findUnique({
-        where: {
-          id: studentId,
-        },
-      });
+      const student = await this.studentService.findStudentById(studentId);
 
       if (!student) {
         return res.status(404).json({
@@ -131,20 +119,13 @@ export class ClassController {
         });
       }
 
-      const cls = await this.db.class.findUnique({
-        where: {
-          id: classId,
-        },
-      });
+      const cls = await this.classService.findClassById(classId);
 
-      const duplicatedClassEnrollment = await this.db.classEnrollment.findFirst(
-        {
-          where: {
-            studentId,
-            classId,
-          },
-        }
-      );
+      const duplicatedClassEnrollment =
+        await this.classService.findFirstClassEnrollment({
+          studentId,
+          classId,
+        });
 
       if (duplicatedClassEnrollment) {
         return res.status(400).json({
@@ -162,11 +143,9 @@ export class ClassController {
         });
       }
 
-      const classEnrollment = await this.db.classEnrollment.create({
-        data: {
-          studentId,
-          classId,
-        },
+      const classEnrollment = await this.classService.createClassEnrollment({
+        studentId,
+        classId,
       });
 
       res.status(201).json({

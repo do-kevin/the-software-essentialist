@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response, Router } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
@@ -9,7 +8,6 @@ export class StudentController {
 
   constructor(
     private studentService: StudentService,
-    private db: PrismaClient,
     private errorHandler: ErrorHandler
   ) {
     this.router = Router();
