@@ -1,4 +1,5 @@
 import express from "express";
+import { PrismaClient } from "@prisma/client";
 // import { Student, Class, Assignment, StudentAssignment } from "@prisma/client";
 
 import { AssignmentController } from "./modules/assignments/assignmentController";
@@ -8,9 +9,15 @@ import { ErrorExceptionHandler } from "./shared/errorExceptionHandler";
 import { StudentService } from "./modules/students/studentService";
 import { ClassService } from "./modules/classes/classService";
 import { AssignmentService } from "./modules/assignments/assignmentService";
+import Database from "./database";
 
 const cors = require("cors");
 const app = express();
+
+const prisma = new PrismaClient();
+
+const database = new Database(prisma);
+
 const router = express.Router();
 
 app.use(express.json());
@@ -20,7 +27,7 @@ const port = process.env.PORT || 3000;
 
 const errorExceptionHandler = new ErrorExceptionHandler();
 
-const studentService = new StudentService();
+const studentService = new StudentService(database);
 
 const studentController = new StudentController(
   studentService,

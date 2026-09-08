@@ -1,85 +1,43 @@
-import { prisma } from "../../database";
+import Database from "../../database";
 
 export class StudentService {
-  constructor() {}
+  constructor(private db: Database) {}
 
   createStudent = async (name: string) => {
-    const student = await prisma.student.create({
-      data: {
-        name,
-      },
-    });
+    const student = await this.db.students.save(name);
 
     return student;
   };
 
   findStudents = async () => {
-    const students = await prisma.student.findMany({
-      include: {
-        classes: true,
-        assignments: true,
-        reportCards: true,
-      },
-      orderBy: {
-        name: "asc",
-      },
-    });
+    const students = await this.db.students.getAll();
 
     return students;
   };
 
   findStudentById = async (id: string) => {
-    const student = await prisma.student.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        classes: true,
-        assignments: true,
-        reportCards: true,
-      },
-    });
+    const student = await this.db.students.getDetailsById(id);
 
     return student;
   };
 
   findStudentExists = async (id: string) => {
-    const student = await prisma.student.findUnique({
-      where: {
-        id,
-      },
-    });
+    const student = await this.db.students.getById(id);
 
     return student;
   };
 
   findStudentAssignments = async (id: string) => {
-    const studentAssignments = await prisma.studentAssignment.findMany({
-      where: {
-        studentId: id,
-        status: "submitted",
-      },
-      include: {
-        assignment: true,
-      },
-    });
+    const studentAssignments = await this.db.students.getSubmittedAssignments(
+      id
+    );
 
     return studentAssignments;
   };
 
   findGradedStudentAssignments = async (id: string) => {
-    const studentAssignments = await prisma.studentAssignment.findMany({
-      where: {
-        studentId: id,
-        status: "submitted",
-        grade: {
-          not: null,
-        },
-      },
-      include: {
-        assignment: true,
-      },
-    });
+    const studentAssignments = await this.db.students.getGradedAssignments(id);
+
     return studentAssignments;
   };
 }
