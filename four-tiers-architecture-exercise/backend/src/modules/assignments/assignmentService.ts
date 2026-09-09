@@ -1,9 +1,8 @@
-import { prisma } from "../../database";
+import Database, { prisma } from "../../database";
 
 export class AssignmentService {
-  constructor() {}
+  constructor(private db: Database) {}
 
-  // TO-DO: may want to name this create new class assignment instead
   createNewAssignment = async ({
     classId,
     title,
@@ -11,12 +10,7 @@ export class AssignmentService {
     classId: string;
     title: string;
   }) => {
-    const assignment = await prisma.assignment.create({
-      data: {
-        classId,
-        title,
-      },
-    });
+    const assignment = await this.db.assignments.save({ classId, title });
 
     return assignment;
   };
@@ -28,73 +22,43 @@ export class AssignmentService {
     studentId: string;
     assignmentId: string;
   }) => {
-    const studentAssignment = await prisma.studentAssignment.create({
-      data: {
-        studentId,
-        assignmentId,
-      },
+    const studentAssignment = await this.db.assignments.saveStudentAssignment({
+      studentId,
+      assignmentId,
     });
 
     return studentAssignment;
   };
 
   findManyAssignmentsByClassId = async (id: string) => {
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        classId: id,
-      },
-      include: {
-        class: true,
-        studentTasks: true,
-      },
-    });
+    const assignments = await this.db.assignments.getClassAssignments(id);
 
     return assignments;
   };
 
   findAssignment = async (id: string) => {
-    const assignment = await prisma.assignment.findUnique({
-      include: {
-        class: true,
-        studentTasks: true,
-      },
-      where: {
-        id,
-      },
-    });
+    const assignment = await this.db.assignments.getById(id);
 
     return assignment;
   };
 
   findAssignmentExists = async (id: string) => {
-    const assignment = prisma.assignment.findUnique({
-      where: {
-        id,
-      },
-    });
+    const assignment = this.db.assignments.checkAssignment(id);
 
     return assignment;
   };
 
   findStudentAssignment = async (id: string) => {
-    const studentAssignment = await prisma.studentAssignment.findUnique({
-      where: {
-        id,
-      },
-    });
+    const studentAssignment = await this.db.assignments.checkStudentAssignment(
+      id
+    );
 
     return studentAssignment;
   };
 
   updateAssignmentToSubmit = async (id: string) => {
-    const studentAssignmentUpdated = await prisma.studentAssignment.update({
-      where: {
-        id,
-      },
-      data: {
-        status: "submitted",
-      },
-    });
+    const studentAssignmentUpdated =
+      await this.db.assignments.submitStudentAssignment(id);
 
     return studentAssignmentUpdated;
   };
@@ -106,15 +70,10 @@ export class AssignmentService {
     grade: string;
     id: string;
   }) => {
-    const studentAssignmentUpdated = await prisma.studentAssignment.update({
-      where: {
-        id,
-      },
-      data: {
-        grade,
-      },
+    const studentAssignmentUpdated = await this.db.assignments.setGrade({
+      grade,
+      id,
     });
-
     return studentAssignmentUpdated;
   };
 }

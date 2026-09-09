@@ -36,7 +36,7 @@ const studentController = new StudentController(
 app.use("/students", studentController.getRouter());
 
 const classService = new ClassService(database);
-const assignmentService = new AssignmentService();
+const assignmentService = new AssignmentService(database);
 
 const classController = new ClassController(
   classService,
