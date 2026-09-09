@@ -11,11 +11,32 @@ interface StudentPersistance {
   getGradedAssignments(id: string): any;
 }
 
+interface ClassPersistence {
+  save(name: string): any;
+  getById(id: string): any;
+  getEnrollment({
+    studentId,
+    classId,
+  }: {
+    studentId: string;
+    classId: string;
+  }): any;
+  saveEnrollment({
+    studentId,
+    classId,
+  }: {
+    studentId: string;
+    classId: string;
+  }): any;
+}
+
 export class Database {
   public students: StudentPersistance;
+  public classes: ClassPersistence;
 
   constructor(private prisma: PrismaClient) {
     this.students = this.buildStudentPersistance();
+    this.classes = this.buildClassPersistence();
   }
 
   private buildStudentPersistance = (): StudentPersistance => {
@@ -107,6 +128,69 @@ export class Database {
       },
     });
     return data;
+  };
+
+  private buildClassPersistence = () => {
+    return {
+      save: this.saveClass,
+      getById: this.getClassById,
+      getEnrollment: this.getFirstEnrollment,
+      saveEnrollment: this.saveEnrollment,
+    };
+  };
+
+  private saveClass = async (name: string) => {
+    const cls = await this.prisma.class.create({
+      data: {
+        name,
+      },
+    });
+
+    return cls;
+  };
+
+  private getClassById = async (id: string) => {
+    const cls = await this.prisma.class.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return cls;
+  };
+
+  private getFirstEnrollment = async ({
+    studentId,
+    classId,
+  }: {
+    studentId: string;
+    classId: string;
+  }) => {
+    const firstClassEnrollment = await this.prisma.classEnrollment.findFirst({
+      where: {
+        studentId,
+        classId,
+      },
+    });
+
+    return firstClassEnrollment;
+  };
+
+  private saveEnrollment = async ({
+    studentId,
+    classId,
+  }: {
+    studentId: string;
+    classId: string;
+  }) => {
+    const classEnrollment = await this.prisma.classEnrollment.create({
+      data: {
+        studentId,
+        classId,
+      },
+    });
+
+    return classEnrollment;
   };
 }
 

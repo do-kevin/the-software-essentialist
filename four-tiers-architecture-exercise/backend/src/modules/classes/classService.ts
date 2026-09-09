@@ -1,24 +1,16 @@
-import { prisma } from "../../database";
+import Database from "../../database";
 
 export class ClassService {
-  constructor() {}
+  constructor(private db: Database) {}
 
   createClass = async (name: string) => {
-    const cls = await prisma.class.create({
-      data: {
-        name,
-      },
-    });
+    const cls = await this.db.classes.save(name);
 
     return cls;
   };
 
   findClassById = async (id: string) => {
-    const cls = await prisma.class.findUnique({
-      where: {
-        id,
-      },
-    });
+    const cls = await this.db.classes.getById(id);
 
     return cls;
   };
@@ -30,11 +22,9 @@ export class ClassService {
     studentId: string;
     classId: string;
   }) => {
-    const firstClassEnrollment = await prisma.classEnrollment.findFirst({
-      where: {
-        studentId,
-        classId,
-      },
+    const firstClassEnrollment = await this.db.classes.getEnrollment({
+      studentId,
+      classId,
     });
 
     return firstClassEnrollment;
@@ -47,11 +37,9 @@ export class ClassService {
     studentId: string;
     classId: string;
   }) => {
-    const classEnrollment = await prisma.classEnrollment.create({
-      data: {
-        studentId,
-        classId,
-      },
+    const classEnrollment = await this.db.classes.saveEnrollment({
+      studentId,
+      classId,
     });
 
     return classEnrollment;
