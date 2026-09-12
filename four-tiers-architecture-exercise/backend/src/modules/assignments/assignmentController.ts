@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { Errors, isMissingKeys, isUUID, parseForResponse } from "../../shared";
+import { Errors } from "../../shared";
+import { isMissingKeys, isUUID, parseForResponse } from "../../shared/utils";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
 import { AssignmentService } from "./assignmentService";
 import { StudentService } from "../students/studentService";
