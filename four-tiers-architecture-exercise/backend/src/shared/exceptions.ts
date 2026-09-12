@@ -39,3 +39,11 @@ export class IdIsNotValidException extends Error {
     super(`The id, ${id}, is not valid.`);
   }
 }
+
+export class InvalidGradeException extends Error {
+  constructor(grade: string) {
+    super(
+      `The grade, ${grade}, is invalid. Only "A", "B", "C", or "D" are accepted.`
+    );
+  }
+}

@@ -1,5 +1,12 @@
 import Database, { prisma } from "../../database";
-import { FindClassAssignmentsDTO } from "./assignmentDTOS";
+import {
+  CreateAssignmentDTO,
+  CreateStudentAssignmentDTO,
+  FindAssignmentDTO,
+  FindClassAssignmentsDTO,
+  SetAssignmentGradeDTO,
+  UpdateStudentAssignmentDTO,
+} from "./assignmentDTOS";
 
 export class AssignmentService {
   constructor(private db: Database) {}
@@ -16,13 +23,9 @@ export class AssignmentService {
     return assignment;
   };
 
-  createStudentAssignment = async ({
-    studentId,
-    assignmentId,
-  }: {
-    studentId: string;
-    assignmentId: string;
-  }) => {
+  createStudentAssignment = async (dto: CreateStudentAssignmentDTO) => {
+    const { studentId, assignmentId } = dto;
+
     const studentAssignment = await this.db.assignments.saveStudentAssignment({
       studentId,
       assignmentId,
@@ -39,19 +42,25 @@ export class AssignmentService {
     return assignments;
   };
 
-  findAssignment = async (id: string) => {
+  findAssignment = async (dto: FindAssignmentDTO) => {
+    const id = dto.id;
+
     const assignment = await this.db.assignments.getById(id);
 
     return assignment;
   };
 
-  findAssignmentExists = async (id: string) => {
+  findAssignmentExists = async (dto: FindAssignmentDTO) => {
+    const id = dto.id;
+
     const assignment = this.db.assignments.checkAssignment(id);
 
     return assignment;
   };
 
-  findStudentAssignment = async (id: string) => {
+  findStudentAssignment = async (dto: FindAssignmentDTO) => {
+    const id = dto.id;
+
     const studentAssignment = await this.db.assignments.checkStudentAssignment(
       id
     );
@@ -59,20 +68,18 @@ export class AssignmentService {
     return studentAssignment;
   };
 
-  updateAssignmentToSubmit = async (id: string) => {
+  updateAssignmentToSubmit = async (dto: UpdateStudentAssignmentDTO) => {
+    const id = dto.id;
+
     const studentAssignmentUpdated =
       await this.db.assignments.submitStudentAssignment(id);
 
     return studentAssignmentUpdated;
   };
 
-  updateAssignmentGrade = async ({
-    id,
-    grade,
-  }: {
-    grade: string;
-    id: string;
-  }) => {
+  updateAssignmentGrade = async (dto: SetAssignmentGradeDTO) => {
+    const { grade, id } = dto;
+
     const studentAssignmentUpdated = await this.db.assignments.setGrade({
       grade,
       id,
