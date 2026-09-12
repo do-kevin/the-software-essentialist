@@ -33,3 +33,9 @@ export class StudentAlreadyEnrolledException extends Error {
     super("Student is already enrolled in the class.");
   }
 }
+
+export class IdIsNotValidException extends Error {
+  constructor(id: string) {
+    super(`The id, ${id}, is not valid.`);
+  }
+}

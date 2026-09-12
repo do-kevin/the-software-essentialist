@@ -1,9 +1,16 @@
 import Database from "../../database";
+import {
+  CreateStudentDTO,
+  FindStudentAssignmentDTO,
+  FindStudentDTO,
+} from "./studentDTOS";
 
 export class StudentService {
   constructor(private db: Database) {}
 
-  createStudent = async (name: string) => {
+  createStudent = async (dto: CreateStudentDTO) => {
+    const name = dto.name;
+
     const student = await this.db.students.save(name);
 
     return student;
@@ -15,19 +22,25 @@ export class StudentService {
     return students;
   };
 
-  findStudentById = async (id: string) => {
+  findStudentById = async (dto: FindStudentDTO) => {
+    const id = dto.id;
+
     const student = await this.db.students.getDetailsById(id);
 
     return student;
   };
 
-  findStudentExists = async (id: string) => {
+  findStudentExists = async (dto: FindStudentDTO) => {
+    const id = dto.id;
+
     const student = await this.db.students.getById(id);
 
     return student;
   };
 
-  findStudentAssignments = async (id: string) => {
+  findStudentAssignments = async (dto: FindStudentAssignmentDTO) => {
+    const id = dto.id;
+
     const studentAssignments = await this.db.students.getSubmittedAssignments(
       id
     );
@@ -35,7 +48,9 @@ export class StudentService {
     return studentAssignments;
   };
 
-  findGradedStudentAssignments = async (id: string) => {
+  findGradedStudentAssignments = async (dto: FindStudentAssignmentDTO) => {
+    const id = dto.id;
+
     const studentAssignments = await this.db.students.getGradedAssignments(id);
 
     return studentAssignments;

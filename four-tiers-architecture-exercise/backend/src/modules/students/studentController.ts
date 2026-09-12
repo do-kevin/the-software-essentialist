@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { Errors } from "../../shared";
-import { isMissingKeys, isUUID, parseForResponse } from "../../shared/utils";
+import { parseForResponse } from "../../shared/utils";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
 import { StudentService } from "./studentService";
+import { CreateStudentDTO, FindStudentDTO } from "./studentDTOS";
 
 export class StudentController {
   private router: Router;
@@ -48,15 +49,9 @@ export class StudentController {
 
   getStudentById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params;
-      if (!isUUID(id)) {
-        return res.status(400).json({
-          error: Errors.ValidationError,
-          data: undefined,
-          success: false,
-        });
-      }
-      const student = await this.studentService.findStudentById(id);
+      const dto = FindStudentDTO.fromRequest(req.params);
+
+      const student = await this.studentService.findStudentById(dto);
 
       if (!student) {
         return res.status(404).json({
@@ -78,21 +73,13 @@ export class StudentController {
 
   createStudent = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (isMissingKeys(req.body, ["name"])) {
-        return res.status(400).json({
-          error: Errors.ValidationError,
-          data: undefined,
-          success: false,
-        });
-      }
+      const dto = CreateStudentDTO.fromRequest(req.body);
 
-      const { name } = req.body;
-
-      const student = await this.studentService.createStudent(name);
+      const data = await this.studentService.createStudent(dto);
 
       res.status(201).json({
         error: undefined,
-        data: parseForResponse(student),
+        data: parseForResponse(data),
         success: true,
       });
     } catch (error) {
@@ -106,16 +93,9 @@ export class StudentController {
     next: NextFunction
   ) => {
     try {
-      const { id } = req.params;
-      if (!isUUID(id)) {
-        return res.status(400).json({
-          error: Errors.ValidationError,
-          data: undefined,
-          success: false,
-        });
-      }
+      const dto = FindStudentDTO.fromRequest(req.params);
 
-      const student = await this.studentService.findStudentExists(id);
+      const student = await this.studentService.findStudentExists(dto);
 
       if (!student) {
         return res.status(404).json({
@@ -126,7 +106,7 @@ export class StudentController {
       }
 
       const studentAssignments =
-        await this.studentService.findStudentAssignments(id);
+        await this.studentService.findStudentAssignments(dto);
 
       res.status(200).json({
         error: undefined,
@@ -144,16 +124,9 @@ export class StudentController {
     next: NextFunction
   ) => {
     try {
-      const { id } = req.params;
-      if (!isUUID(id)) {
-        return res.status(400).json({
-          error: Errors.ValidationError,
-          data: undefined,
-          success: false,
-        });
-      }
+      const dto = FindStudentDTO.fromRequest(req.params);
 
-      const student = await this.studentService.findStudentExists(id);
+      const student = await this.studentService.findStudentExists(dto);
 
       if (!student) {
         return res.status(404).json({
@@ -164,7 +137,7 @@ export class StudentController {
       }
 
       const studentAssignments =
-        await this.studentService.findGradedStudentAssignments(id);
+        await this.studentService.findGradedStudentAssignments(dto);
 
       res.status(200).json({
         error: undefined,
