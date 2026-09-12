@@ -46,7 +46,7 @@ export class CreateStudentAssignmentDTO {
   }
 }
 
-export class FindClassAssignmentsDTO {
+export class FindAssignmentsByClassDTO {
   constructor(public id: string) {}
 
   static fromRequest(body: unknown) {
@@ -61,7 +61,7 @@ export class FindClassAssignmentsDTO {
 
     const { id } = body as { id: string };
 
-    return new FindClassAssignmentsDTO(id);
+    return new FindAssignmentsByClassDTO(id);
   }
 }
 
@@ -103,33 +103,11 @@ export class UpdateStudentAssignmentDTO {
 
     const { id } = body as { id: string };
 
-    return new FindAssignmentDTO(id);
+    return new UpdateStudentAssignmentDTO(id);
   }
 }
 
-export class SetStudentToAssignmentDTO {
-  constructor(public studentId: string, public assignmentId: string) {}
-
-  static fromRequest(body: unknown) {
-    const requiredKeys = ["studentId", "assignmentId"];
-
-    const isRequestInvalid =
-      !body || typeof body !== "object" || isMissingKeys(body, requiredKeys);
-
-    if (isRequestInvalid) {
-      throw new InvalidRequestBodyException(requiredKeys);
-    }
-
-    const { studentId, assignmentId } = body as {
-      studentId: string;
-      assignmentId: string;
-    };
-
-    return new SetStudentToAssignmentDTO(studentId, assignmentId);
-  }
-}
-
-export class SetAssignmentGradeDTO {
+export class UpdateAssignmentGradeDTO {
   constructor(public id: string, public grade: string) {}
 
   static fromRequest(body: unknown) {
@@ -151,6 +129,6 @@ export class SetAssignmentGradeDTO {
       throw new InvalidGradeException(grade);
     }
 
-    return new SetAssignmentGradeDTO(id, grade);
+    return new UpdateAssignmentGradeDTO(id, grade);
   }
 }

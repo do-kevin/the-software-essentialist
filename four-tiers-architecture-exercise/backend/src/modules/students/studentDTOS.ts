@@ -65,6 +65,6 @@ export class FindStudentAssignmentDTO {
       throw new IdIsNotValidException(id);
     }
 
-    return new FindStudentDTO(id);
+    return new FindStudentAssignmentDTO(id);
   }
 }

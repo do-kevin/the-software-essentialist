@@ -1,23 +1,19 @@
-import Database, { prisma } from "../../database";
+import Database from "../../database";
 import {
   CreateAssignmentDTO,
   CreateStudentAssignmentDTO,
   FindAssignmentDTO,
-  FindClassAssignmentsDTO,
-  SetAssignmentGradeDTO,
+  FindAssignmentsByClassDTO,
+  UpdateAssignmentGradeDTO,
   UpdateStudentAssignmentDTO,
 } from "./assignmentDTOS";
 
 export class AssignmentService {
   constructor(private db: Database) {}
 
-  createNewAssignment = async ({
-    classId,
-    title,
-  }: {
-    classId: string;
-    title: string;
-  }) => {
+  createAssignment = async (dto: CreateAssignmentDTO) => {
+    const { classId, title } = dto;
+
     const assignment = await this.db.assignments.save({ classId, title });
 
     return assignment;
@@ -34,7 +30,7 @@ export class AssignmentService {
     return studentAssignment;
   };
 
-  findManyAssignmentsByClassId = async (dto: FindClassAssignmentsDTO) => {
+  findAssignmentsByClass = async (dto: FindAssignmentsByClassDTO) => {
     const id = dto.id;
 
     const assignments = await this.db.assignments.getClassAssignments(id);
@@ -58,7 +54,7 @@ export class AssignmentService {
     return assignment;
   };
 
-  findStudentAssignment = async (dto: FindAssignmentDTO) => {
+  findStudentAssignmentExists = async (dto: FindAssignmentDTO) => {
     const id = dto.id;
 
     const studentAssignment = await this.db.assignments.checkStudentAssignment(
@@ -68,7 +64,7 @@ export class AssignmentService {
     return studentAssignment;
   };
 
-  updateAssignmentToSubmit = async (dto: UpdateStudentAssignmentDTO) => {
+  submitStudentAssignment = async (dto: UpdateStudentAssignmentDTO) => {
     const id = dto.id;
 
     const studentAssignmentUpdated =
@@ -77,7 +73,7 @@ export class AssignmentService {
     return studentAssignmentUpdated;
   };
 
-  updateAssignmentGrade = async (dto: SetAssignmentGradeDTO) => {
+  updateAssignmentGrade = async (dto: UpdateAssignmentGradeDTO) => {
     const { grade, id } = dto;
 
     const studentAssignmentUpdated = await this.db.assignments.setGrade({

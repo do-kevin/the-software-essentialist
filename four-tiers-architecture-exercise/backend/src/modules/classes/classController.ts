@@ -7,10 +7,11 @@ import { AssignmentService } from "../assignments/assignmentService";
 import { StudentService } from "../students/studentService";
 import {
   CreateClassDTO,
+  CreateClassEnrollmentDTO,
   FindClassDTO,
-  FindClassEnrollmentDTO,
 } from "./classDTOS";
-import { FindClassAssignmentsDTO } from "../assignments/assignmentDTOS";
+import { FindAssignmentsByClassDTO } from "../assignments/assignmentDTOS";
+import { FindStudentDTO } from "../students/studentDTOS";
 
 export class ClassController {
   private router: Router;
@@ -32,8 +33,8 @@ export class ClassController {
 
   private setupRoutes() {
     this.router.post("/", this.createClass);
-    this.router.get("/:id/assignments", this.getAssignmentsFromClass);
-    this.router.post("/class-enrollments", this.postStudentToClass);
+    this.router.get("/:id/assignments", this.findAssignmentsByClass);
+    this.router.post("/class-enrollments", this.createClassEnrollment);
   }
 
   private setupErrorHandler() {
@@ -54,15 +55,15 @@ export class ClassController {
     }
   };
 
-  getAssignmentsFromClass = async (
+  findAssignmentsByClass = async (
     req: Request,
     res: Response,
     next: NextFunction
   ) => {
     try {
-      let dto = FindClassDTO.fromRequest(req.params);
+      const findClassDto = FindClassDTO.fromRequest(req.params);
 
-      const cls = await this.classService.findClassById(dto);
+      const cls = await this.classService.findClassById(findClassDto);
 
       if (!cls) {
         return res.status(404).json({
@@ -72,10 +73,13 @@ export class ClassController {
         });
       }
 
-      dto = FindClassAssignmentsDTO.fromRequest(req.params);
+      const findAssignmentsDto = FindAssignmentsByClassDTO.fromRequest(
+        req.params
+      );
 
-      const assignments =
-        await this.assignmentService.findManyAssignmentsByClassId(dto);
+      const assignments = await this.assignmentService.findAssignmentsByClass(
+        findAssignmentsDto
+      );
 
       res.status(200).json({
         error: undefined,
@@ -87,17 +91,16 @@ export class ClassController {
     }
   };
 
-  postStudentToClass = async (
+  createClassEnrollment = async (
     req: Request,
     res: Response,
     next: NextFunction
   ) => {
     try {
-      let dto = FindClassEnrollmentDTO.fromRequest(req.body);
+      const dto = CreateClassEnrollmentDTO.fromRequest(req.body);
 
-      const student = await this.studentService.findStudentById({
-        id: dto.studentId,
-      });
+      const findStudentDto = FindStudentDTO.fromRequest({ id: dto.studentId });
+      const student = await this.studentService.findStudentById(findStudentDto);
 
       if (!student) {
         return res.status(404).json({
@@ -107,22 +110,23 @@ export class ClassController {
         });
       }
 
-      const cls = await this.classService.findClassById({ id: dto.classId });
+      const findClassDto = FindClassDTO.fromRequest({ id: dto.classId });
+      const cls = await this.classService.findClassById(findClassDto);
 
-      const duplicatedClassEnrollment =
-        await this.classService.findFirstClassEnrollment(dto);
-
-      if (duplicatedClassEnrollment) {
-        return res.status(400).json({
-          error: Errors.StudentAlreadyEnrolled,
+      if (!cls) {
+        return res.status(404).json({
+          error: Errors.ClassNotFound,
           data: undefined,
           success: false,
         });
       }
 
-      if (!cls) {
-        return res.status(404).json({
-          error: Errors.ClassNotFound,
+      const duplicateEnrollment =
+        await this.classService.findExistingClassEnrollment(dto);
+
+      if (duplicateEnrollment) {
+        return res.status(400).json({
+          error: Errors.StudentAlreadyEnrolled,
           data: undefined,
           success: false,
         });

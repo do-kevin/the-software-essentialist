@@ -39,28 +39,6 @@ export class FindClassDTO {
   }
 }
 
-export class FindClassEnrollmentDTO {
-  constructor(public studentId: string, public classId: string) {}
-
-  static fromRequest(body: unknown) {
-    const requiredKeys = ["studentId", "classId"];
-
-    const isRequestInvalid =
-      !body || typeof body !== "object" || isMissingKeys(body, requiredKeys);
-
-    if (isRequestInvalid) {
-      throw new InvalidRequestBodyException(requiredKeys);
-    }
-
-    const { studentId, classId } = body as {
-      studentId: string;
-      classId: string;
-    };
-
-    return new FindClassEnrollmentDTO(studentId, classId);
-  }
-}
-
 export class CreateClassEnrollmentDTO {
   constructor(public studentId: string, public classId: string) {}
 

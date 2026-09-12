@@ -3,7 +3,6 @@ import {
   CreateClassDTO,
   CreateClassEnrollmentDTO,
   FindClassDTO,
-  FindClassEnrollmentDTO,
 } from "./classDTOS";
 
 export class ClassService {
@@ -25,15 +24,15 @@ export class ClassService {
     return cls;
   };
 
-  findFirstClassEnrollment = async (dto: FindClassEnrollmentDTO) => {
+  findExistingClassEnrollment = async (dto: CreateClassEnrollmentDTO) => {
     const ids = {
       studentId: dto.studentId,
       classId: dto.classId,
     };
 
-    const firstClassEnrollment = await this.db.classes.getEnrollment(ids);
+    const existingEnrollment = await this.db.classes.getEnrollment(ids);
 
-    return firstClassEnrollment;
+    return existingEnrollment;
   };
 
   createClassEnrollment = async (dto: CreateClassEnrollmentDTO) => {
