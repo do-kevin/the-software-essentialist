@@ -1,10 +1,16 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { Errors } from "../../shared";
-import { isMissingKeys, isUUID, parseForResponse } from "../../shared/utils";
+import { parseForResponse } from "../../shared/utils";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
 import { ClassService } from "./classService";
 import { AssignmentService } from "../assignments/assignmentService";
 import { StudentService } from "../students/studentService";
+import {
+  CreateClassDTO,
+  FindClassDTO,
+  FindClassEnrollmentDTO,
+} from "./classDTOS";
+import { FindClassAssignmentsDTO } from "../assignments/assignmentDTOS";
 
 export class ClassController {
   private router: Router;
@@ -36,17 +42,9 @@ export class ClassController {
 
   createClass = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (isMissingKeys(req.body, ["name"])) {
-        return res.status(400).json({
-          error: Errors.ValidationError,
-          data: undefined,
-          success: false,
-        });
-      }
+      const dto = CreateClassDTO.fromRequest(req.body);
 
-      const { name } = req.body;
-
-      const cls = await this.classService.createClass(name);
+      const cls = await this.classService.createClass(dto);
 
       res
         .status(201)
@@ -62,16 +60,9 @@ export class ClassController {
     next: NextFunction
   ) => {
     try {
-      const { id } = req.params;
-      if (!isUUID(id)) {
-        return res.status(400).json({
-          error: Errors.ValidationError,
-          data: undefined,
-          success: false,
-        });
-      }
+      let dto = FindClassDTO.fromRequest(req.params);
 
-      const cls = await this.classService.findClassById(id);
+      const cls = await this.classService.findClassById(dto);
 
       if (!cls) {
         return res.status(404).json({
@@ -81,8 +72,10 @@ export class ClassController {
         });
       }
 
+      dto = FindClassAssignmentsDTO.fromRequest(req.params);
+
       const assignments =
-        await this.assignmentService.findManyAssignmentsByClassId(id);
+        await this.assignmentService.findManyAssignmentsByClassId(dto);
 
       res.status(200).json({
         error: undefined,
@@ -100,17 +93,11 @@ export class ClassController {
     next: NextFunction
   ) => {
     try {
-      if (isMissingKeys(req.body, ["studentId", "classId"])) {
-        return res.status(400).json({
-          error: Errors.ValidationError,
-          data: undefined,
-          success: false,
-        });
-      }
+      let dto = FindClassEnrollmentDTO.fromRequest(req.body);
 
-      const { studentId, classId } = req.body;
-
-      const student = await this.studentService.findStudentById(studentId);
+      const student = await this.studentService.findStudentById({
+        id: dto.studentId,
+      });
 
       if (!student) {
         return res.status(404).json({
@@ -120,13 +107,10 @@ export class ClassController {
         });
       }
 
-      const cls = await this.classService.findClassById(classId);
+      const cls = await this.classService.findClassById({ id: dto.classId });
 
       const duplicatedClassEnrollment =
-        await this.classService.findFirstClassEnrollment({
-          studentId,
-          classId,
-        });
+        await this.classService.findFirstClassEnrollment(dto);
 
       if (duplicatedClassEnrollment) {
         return res.status(400).json({
@@ -144,14 +128,11 @@ export class ClassController {
         });
       }
 
-      const classEnrollment = await this.classService.createClassEnrollment({
-        studentId,
-        classId,
-      });
+      const data = await this.classService.createClassEnrollment(dto);
 
       res.status(201).json({
         error: undefined,
-        data: parseForResponse(classEnrollment),
+        data: parseForResponse(data),
         success: true,
       });
     } catch (error) {

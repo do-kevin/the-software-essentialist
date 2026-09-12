@@ -1,4 +1,5 @@
 import Database, { prisma } from "../../database";
+import { FindClassAssignmentsDTO } from "./assignmentDTOS";
 
 export class AssignmentService {
   constructor(private db: Database) {}
@@ -30,7 +31,9 @@ export class AssignmentService {
     return studentAssignment;
   };
 
-  findManyAssignmentsByClassId = async (id: string) => {
+  findManyAssignmentsByClassId = async (dto: FindClassAssignmentsDTO) => {
+    const id = dto.id;
+
     const assignments = await this.db.assignments.getClassAssignments(id);
 
     return assignments;
