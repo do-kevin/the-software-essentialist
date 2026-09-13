@@ -1,5 +1,5 @@
-import Database from "../../database";
-import {
+import type Database from "../../database";
+import type {
   CreateAssignmentDTO,
   CreateStudentAssignmentDTO,
   FindAssignmentDTO,
