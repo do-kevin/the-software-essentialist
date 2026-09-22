@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { Errors } from "../../shared";
 import { parseForResponse } from "../../shared/utils";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
 import { AssignmentService } from "./assignmentService";
@@ -12,6 +11,11 @@ import {
   UpdateStudentAssignmentDTO,
 } from "./assignmentDTOS";
 import { FindStudentDTO } from "../students/studentDTOS";
+import {
+  AssignmentNotFoundException,
+  StudentAssignmentNotFoundException,
+  StudentNotFoundException,
+} from "../../shared/exceptions";
 
 export class AssignmentController {
   private router: Router;
@@ -72,11 +76,7 @@ export class AssignmentController {
       const assignment = await this.assignmentService.findAssignment(dto);
 
       if (!assignment) {
-        return res.status(404).json({
-          error: Errors.AssignmentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new AssignmentNotFoundException();
       }
 
       res.status(200).json({
@@ -106,11 +106,7 @@ export class AssignmentController {
       );
 
       if (!student) {
-        return res.status(404).json({
-          error: Errors.StudentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new StudentNotFoundException();
       }
 
       const findAssignmentDto = FindAssignmentDTO.fromRequest({
@@ -122,11 +118,7 @@ export class AssignmentController {
       );
 
       if (!assignment) {
-        return res.status(404).json({
-          error: Errors.AssignmentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new AssignmentNotFoundException();
       }
 
       const studentAssignment =
@@ -154,11 +146,7 @@ export class AssignmentController {
         await this.assignmentService.findStudentAssignmentExists(findDto);
 
       if (!studentAssignment) {
-        return res.status(404).json({
-          error: Errors.AssignmentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new StudentAssignmentNotFoundException();
       }
 
       const updateDto = UpdateStudentAssignmentDTO.fromRequest(req.body);
@@ -190,11 +178,7 @@ export class AssignmentController {
         await this.assignmentService.findStudentAssignmentExists(findDto);
 
       if (!studentAssignment) {
-        return res.status(404).json({
-          error: Errors.AssignmentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new StudentAssignmentNotFoundException();
       }
 
       const studentAssignmentUpdated =

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { Errors } from "../../shared";
 import { parseForResponse } from "../../shared/utils";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
 import { ClassService } from "./classService";
@@ -12,6 +11,11 @@ import {
 } from "./classDTOS";
 import { FindAssignmentsByClassDTO } from "../assignments/assignmentDTOS";
 import { FindStudentDTO } from "../students/studentDTOS";
+import {
+  ClassNotFoundException,
+  StudentAlreadyEnrolledException,
+  StudentNotFoundException,
+} from "../../shared/exceptions";
 
 export class ClassController {
   private router: Router;
@@ -66,11 +70,7 @@ export class ClassController {
       const cls = await this.classService.findClassById(findClassDto);
 
       if (!cls) {
-        return res.status(404).json({
-          error: Errors.ClassNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new ClassNotFoundException(findClassDto.id);
       }
 
       const findAssignmentsDto = FindAssignmentsByClassDTO.fromRequest(
@@ -103,33 +103,21 @@ export class ClassController {
       const student = await this.studentService.findStudentById(findStudentDto);
 
       if (!student) {
-        return res.status(404).json({
-          error: Errors.StudentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new StudentNotFoundException();
       }
 
       const findClassDto = FindClassDTO.fromRequest({ id: dto.classId });
       const cls = await this.classService.findClassById(findClassDto);
 
       if (!cls) {
-        return res.status(404).json({
-          error: Errors.ClassNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new ClassNotFoundException(findClassDto.id);
       }
 
       const duplicateEnrollment =
         await this.classService.findExistingClassEnrollment(dto);
 
       if (duplicateEnrollment) {
-        return res.status(400).json({
-          error: Errors.StudentAlreadyEnrolled,
-          data: undefined,
-          success: false,
-        });
+        throw new StudentAlreadyEnrolledException();
       }
 
       const data = await this.classService.createClassEnrollment(dto);
