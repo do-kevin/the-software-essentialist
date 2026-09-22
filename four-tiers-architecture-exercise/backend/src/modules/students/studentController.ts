@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { Errors } from "../../shared";
 import { parseForResponse } from "../../shared/utils";
 import { ErrorHandler } from "../../shared/errorExceptionHandler";
 import { StudentService } from "./studentService";
 import { CreateStudentDTO, FindStudentDTO } from "./studentDTOS";
+import { StudentNotFoundException } from "../../shared/exceptions";
 
 export class StudentController {
   private router: Router;
@@ -54,11 +54,7 @@ export class StudentController {
       const student = await this.studentService.findStudentById(dto);
 
       if (!student) {
-        return res.status(404).json({
-          error: Errors.StudentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new StudentNotFoundException();
       }
 
       res.status(200).json({
@@ -98,11 +94,7 @@ export class StudentController {
       const student = await this.studentService.findStudentExists(dto);
 
       if (!student) {
-        return res.status(404).json({
-          error: Errors.StudentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new StudentNotFoundException();
       }
 
       const studentAssignments =
@@ -129,11 +121,7 @@ export class StudentController {
       const student = await this.studentService.findStudentExists(dto);
 
       if (!student) {
-        return res.status(404).json({
-          error: Errors.StudentNotFound,
-          data: undefined,
-          success: false,
-        });
+        throw new StudentNotFoundException();
       }
 
       const studentAssignments =
