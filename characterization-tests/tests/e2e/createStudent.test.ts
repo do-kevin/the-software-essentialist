@@ -1,12 +1,17 @@
 import { loadFeature, describeFeature } from "@amiceli/vitest-cucumber";
-import { expect } from "vitest";
+import { beforeEach, expect } from "vitest";
 import request from "supertest";
 import { app } from "../../src";
 import { faker } from "@faker-js/faker";
+import { resetDatabase } from "../fixtures/reset";
 
 const feature = await loadFeature("tests/features/create-student.feature");
 
-describeFeature(feature, ({ Scenario }) => {
+describeFeature(feature, ({ Scenario, BeforeEachScenario }) => {
+  BeforeEachScenario(async () => {
+    await resetDatabase();
+  });
+
   Scenario(`Successfully create a student record`, ({ Given, When, Then }) => {
     let requestBody: any = {};
     let response: any = {};

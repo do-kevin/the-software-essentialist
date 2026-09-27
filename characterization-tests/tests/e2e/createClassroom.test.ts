@@ -3,10 +3,15 @@ import request from "supertest";
 import { expect } from "vitest";
 import { app } from "../../src/index";
 import { faker } from "@faker-js/faker";
+import { resetDatabase } from "../fixtures/reset";
 
 const feature = await loadFeature("tests/features/create-classroom.feature");
 
-describeFeature(feature, ({ Scenario }) => {
+describeFeature(feature, ({ Scenario, BeforeEachScenario }) => {
+  BeforeEachScenario(async () => {
+    await resetDatabase();
+  });
+
   Scenario(`Successfully create a class room`, ({ Given, When, Then }) => {
     let requestBody: any = {};
     let response: any = {};
@@ -43,7 +48,6 @@ describeFeature(feature, ({ Scenario }) => {
     });
 
     Then(`the class room not should be created.`, () => {
-      console.log("hit: ", response.status);
       expect(response.status).toBe(400);
     });
   });
