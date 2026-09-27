@@ -2,6 +2,7 @@ import { loadFeature, describeFeature } from "@amiceli/vitest-cucumber";
 import request from "supertest";
 import { expect } from "vitest";
 import { app } from "../../src/index";
+import { faker } from "@faker-js/faker";
 
 const feature = await loadFeature("tests/features/create-classroom.feature");
 
@@ -10,9 +11,11 @@ describeFeature(feature, ({ Scenario }) => {
     let requestBody: any = {};
     let response: any = {};
 
-    Given(`I want to create a class room named {string}`, (_context, name) => {
+    Given(`I want to create a class room named {string}`, (_context, _name) => {
+      const uniqueName = faker.lorem.word() + faker.string.uuid();
+
       requestBody = {
-        name,
+        name: uniqueName,
       };
     });
     When(`I send a request to create a class room`, async () => {

@@ -2,6 +2,7 @@ import { loadFeature, describeFeature } from "@amiceli/vitest-cucumber";
 import { expect } from "vitest";
 import request from "supertest";
 import { app } from "../../src";
+import { faker } from "@faker-js/faker";
 
 const feature = await loadFeature("tests/features/create-student.feature");
 
@@ -10,9 +11,11 @@ describeFeature(feature, ({ Scenario }) => {
     let requestBody: any = {};
     let response: any = {};
 
-    Given(`I want to create a student named {string}`, (_context, name) => {
+    Given(`I want to create a student named {string}`, (_context, _name) => {
+      const uniqueName = faker.person.firstName() + faker.string.uuid();
+
       requestBody = {
-        name,
+        name: uniqueName,
       };
     });
 
