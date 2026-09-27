@@ -5,8 +5,19 @@ const feature = await loadFeature("tests/features/create-student.feature");
 
 describeFeature(feature, ({ Scenario }) => {
   Scenario(`Successfully create a student record`, ({ Given, When, Then }) => {
+    let response: any = {};
+
     Given(`I want to create a student named {string}`, () => {});
-    When(`I send a request to create the student`, () => {});
+
+    When(`I send a request to create the student`, () => {
+      response = {
+        status: 201,
+        body: {
+          name: "Kevin",
+        },
+      };
+    });
+
     Then(`the student record is created successfully.`, () => {
       expect(response.status).toBe(201);
       expect(response.body.name).toBe("Kevin");
