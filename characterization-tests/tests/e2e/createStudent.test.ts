@@ -10,9 +10,9 @@ describeFeature(feature, ({ Scenario }) => {
     let requestBody: any = {};
     let response: any = {};
 
-    Given(`I want to create a student named {string}`, () => {
+    Given(`I want to create a student named {string}`, (_context, name) => {
       requestBody = {
-        name: "Kevin",
+        name,
       };
     });
 
@@ -22,7 +22,7 @@ describeFeature(feature, ({ Scenario }) => {
 
     Then(`the student record is created successfully.`, () => {
       expect(response.status).toBe(201);
-      expect(response.body.data.name).toBe("Kevin");
+      expect(response.body.data.name).toBe(requestBody.name);
     });
   });
   Scenario(`Fail to create a student`, ({ Given, When, Then }) => {
