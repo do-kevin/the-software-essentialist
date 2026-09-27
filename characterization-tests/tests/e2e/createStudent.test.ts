@@ -1,26 +1,28 @@
 import { loadFeature, describeFeature } from "@amiceli/vitest-cucumber";
 import { expect } from "vitest";
+import request from "supertest";
+import { app } from "../../src";
 
 const feature = await loadFeature("tests/features/create-student.feature");
 
 describeFeature(feature, ({ Scenario }) => {
   Scenario(`Successfully create a student record`, ({ Given, When, Then }) => {
+    let requestBody: any = {};
     let response: any = {};
 
-    Given(`I want to create a student named {string}`, () => {});
-
-    When(`I send a request to create the student`, () => {
-      response = {
-        status: 201,
-        body: {
-          name: "Kevin",
-        },
+    Given(`I want to create a student named {string}`, () => {
+      requestBody = {
+        name: "Kevin",
       };
+    });
+
+    When(`I send a request to create the student`, async () => {
+      response = await request(app).post("/students").send(requestBody);
     });
 
     Then(`the student record is created successfully.`, () => {
       expect(response.status).toBe(201);
-      expect(response.body.name).toBe("Kevin");
+      expect(response.body.data.name).toBe("Kevin");
     });
   });
   Scenario(`Fail to create a student`, ({ Given, When, Then }) => {
