@@ -4,6 +4,7 @@ import { expect } from "vitest";
 import { app } from "../../src/index";
 import { faker } from "@faker-js/faker";
 import { resetDatabase } from "../fixtures/reset";
+import { Class } from "@prisma/client";
 
 const feature = await loadFeature("tests/features/create-classroom.feature");
 
@@ -53,14 +54,31 @@ describeFeature(feature, ({ Scenario, BeforeEachScenario }) => {
   });
 
   Scenario(`Classroom already exists`, ({ Given, When, Then }) => {
-    let requestBody: any = {};
+    let requestBody: Partial<Pick<Class, "name">> = {};
     let response: any = {};
+    const classRoomName = "Science";
 
-    Given(`I want to create a class room that already exists`, () => {});
+    Given(`I want to create a class room that already exists`, () => {
+      requestBody = {
+        name: classRoomName,
+      };
+    });
 
-    When(`I send a request to create a class room`, async () => {});
+    When(`I send a request to create a class room`, async () => {
+      response = {
+        status: 409,
+        body: {
+          success: false,
+          data: {
+            id: faker.string.uuid(),
+            name: classRoomName,
+          },
+          error: "ClassAlreadyExists",
+        },
+      };
+    });
 
-    Then(`the class room not should be created.`, () => {
+    Then(`the class room should not be created.`, () => {
       expect(response.status).toBe(409);
       expect(response.body.success).toBeFalsy();
       expect(response.body.error).toBe("ClassAlreadyExists");

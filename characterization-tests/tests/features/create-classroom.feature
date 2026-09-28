@@ -17,4 +17,4 @@ Feature: Create classroom
   Scenario: Classroom already exists
     Given I want to create a class room that already exists
     When I send a request to create a class room
-    Then the class room should not be created
+    Then the class room should not be created.
