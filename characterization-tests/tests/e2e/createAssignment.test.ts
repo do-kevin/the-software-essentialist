@@ -43,10 +43,25 @@ describeFeature(feature, ({ BeforeEachScenario, Scenario }) => {
   });
 
   Scenario(`Fail to create an assignment`, ({ Given, When, Then }) => {
-    Given(`I want to create an assignment with no title.`, () => {});
-    When(`I send a request to create an assignment`, () => {});
+    let requestBody: Partial<Pick<Assignment, "classId" | "title">> = {};
+    let response: any = {};
+    let classRoom: Class;
+
+    Given(`I want to create an assignment with no title.`, async () => {
+      classRoom = await new ClassroomBuilder().withName("Math").build();
+
+      requestBody = {
+        classId: classRoom.id,
+        title: undefined,
+      };
+    });
+
+    When(`I send a request to create an assignment`, async () => {
+      response = await request(app).post("/assignments").send(requestBody);
+    });
+
     Then(`the assignment should not be created.`, () => {
-      // expect(response.status).toBe(400);
+      expect(response.status).toBe(400);
     });
   });
 });
