@@ -5,6 +5,7 @@ import { app } from "../../src/index";
 import { faker } from "@faker-js/faker";
 import { resetDatabase } from "../fixtures/reset";
 import { Class } from "@prisma/client";
+import { ClassroomBuilder } from "../fixtures/builders/classroomBuilder";
 
 const feature = await loadFeature("tests/features/create-classroom.feature");
 
@@ -58,24 +59,16 @@ describeFeature(feature, ({ Scenario, BeforeEachScenario }) => {
     let response: any = {};
     const classRoomName = "Science";
 
-    Given(`I want to create a class room that already exists`, () => {
+    Given(`I want to create a class room that already exists`, async () => {
       requestBody = {
         name: classRoomName,
       };
+
+      await new ClassroomBuilder().withName(classRoomName).build();
     });
 
     When(`I send a request to create a class room`, async () => {
-      response = {
-        status: 409,
-        body: {
-          success: false,
-          data: {
-            id: faker.string.uuid(),
-            name: classRoomName,
-          },
-          error: "ClassAlreadyExists",
-        },
-      };
+      response = await request(app).post("/classes").send(requestBody);
     });
 
     Then(`the class room should not be created.`, () => {

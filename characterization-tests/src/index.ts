@@ -15,6 +15,7 @@ const Errors = {
   ServerError: "ServerError",
   ClientError: "ClientError",
   StudentAlreadyEnrolled: "StudentAlreadyEnrolled",
+  ClassAlreadyExists: "ClassAlreadyExists",
 };
 
 function isMissingKeys(data: any, keysToCheckFor: string[]) {
@@ -79,6 +80,20 @@ app.post("/classes", async (req: Request, res: Response) => {
     }
 
     const { name } = req.body;
+
+    const duplicatedClassRoom = await prisma.class.findFirst({
+      where: {
+        name,
+      },
+    });
+
+    if (duplicatedClassRoom) {
+      return res.status(409).json({
+        error: Errors.ClassAlreadyExists,
+        data: duplicatedClassRoom,
+        success: false,
+      });
+    }
 
     const cls = await prisma.class.create({
       data: {

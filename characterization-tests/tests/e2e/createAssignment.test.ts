@@ -1,7 +1,6 @@
 import { loadFeature, describeFeature } from "@amiceli/vitest-cucumber";
 import { app } from "../../src";
-import { faker } from "@faker-js/faker";
-import request, { type Response } from "supertest";
+import request from "supertest";
 import { resetDatabase } from "../fixtures/reset";
 import { expect } from "vitest";
 import { Assignment, Class } from "@prisma/client";
