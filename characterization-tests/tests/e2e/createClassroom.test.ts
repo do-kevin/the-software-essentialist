@@ -51,4 +51,19 @@ describeFeature(feature, ({ Scenario, BeforeEachScenario }) => {
       expect(response.status).toBe(400);
     });
   });
+
+  Scenario(`Classroom already exists`, ({ Given, When, Then }) => {
+    let requestBody: any = {};
+    let response: any = {};
+
+    Given(`I want to create a class room that already exists`, () => {});
+
+    When(`I send a request to create a class room`, async () => {});
+
+    Then(`the class room not should be created.`, () => {
+      expect(response.status).toBe(409);
+      expect(response.body.success).toBeFalsy();
+      expect(response.body.error).toBe("ClassAlreadyExists");
+    });
+  });
 });
