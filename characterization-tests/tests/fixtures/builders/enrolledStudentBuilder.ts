@@ -26,12 +26,16 @@ export class EnrolledStudentBuilder {
       throw new Error("You must define the student builder");
     }
 
-    const classroom = this.classroomBuilder;
-    const student = this.studentBuilder;
+    const classroom = await this.classroomBuilder.build();
+    const student = await this.studentBuilder.build();
 
-    return {
-      classroom,
-      student,
-    };
+    const enrolledStudent = await prisma.classEnrollment.create({
+      data: {
+        classId: classroom.id,
+        studentId: student.id,
+      },
+    });
+
+    return enrolledStudent;
   };
 }

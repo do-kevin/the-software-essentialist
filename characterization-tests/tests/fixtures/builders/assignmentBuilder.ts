@@ -1,4 +1,4 @@
-import { Assignment } from "@prisma/client";
+import { Assignment, Class } from "@prisma/client";
 import { prisma } from "../../../src/database";
 import { ClassroomBuilder } from "./classroomBuilder";
 
@@ -10,25 +10,38 @@ export class AssignmentBuilder {
     this.assignment = {};
   }
 
+  from = (classroomBuilder: ClassroomBuilder) => {
+    this.classRoomBuilder = classroomBuilder;
+    return this;
+  };
+
   withTitle = (title: string) => {
     this.assignment.title = title;
     return this;
   };
 
+  withClassId = (classId: string) => {
+    this.assignment.classId = classId;
+    return this;
+  };
+
   build = async () => {
-    if (!this.classRoomBuilder) {
-      throw new Error("You must define the classroom builder");
+    let classId = this.assignment.classId;
+
+    if (!classId) {
+      if (!this.classRoomBuilder) {
+        throw new Error(
+          "Provide either withClassId() or define the classRoomBuilder"
+        );
+      }
+      classId = (await this.classRoomBuilder.build()).id;
     }
 
-    const classRoom = await this.classRoomBuilder.build();
-
-    const assignment = await prisma.assignment.create({
+    return prisma.assignment.create({
       data: {
-        classId: classRoom.id,
+        classId,
         title: this.assignment.title as string,
       },
     });
-
-    return assignment;
   };
 }
