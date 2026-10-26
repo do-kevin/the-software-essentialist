@@ -26,6 +26,12 @@ export class EnrolledStudentBuilder {
       throw new Error("You must define the student builder");
     }
 
-    return null;
+    const classroom = this.classroomBuilder;
+    const student = this.studentBuilder;
+
+    return {
+      classroom,
+      student,
+    };
   };
 }
